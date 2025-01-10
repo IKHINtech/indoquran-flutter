@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'IndoQur`an',
       initialRoute: "/",
       routes: {
-        "/home": (context) => const HomeScreen(),
+        "/home": (context) => HomeScreen(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

@@ -86,6 +86,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.2.1"
+  flutter_floating_bottom_bar:
+    dependency: "direct main"
+    description:
+      name: flutter_floating_bottom_bar
+      sha256: "5aff247b2015837bd121b6c694fb30107ed5677cd74e3088f6a5a18e369bc0ec"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1+1"
   flutter_lints:
     dependency: "direct dev"
     description:
