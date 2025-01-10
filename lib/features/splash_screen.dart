@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _timer = Timer.periodic(
-      const Duration(microseconds: 500),
+      const Duration(seconds: 1),
       (timer) {
         setState(
           () {
@@ -32,6 +32,9 @@ class _SplashScreenState extends State<SplashScreen> {
         );
       },
     );
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacementNamed('/home');
+    });
   }
 
   @override
