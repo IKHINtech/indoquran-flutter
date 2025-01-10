@@ -10,36 +10,77 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
-  EdgeInsets _padding = const EdgeInsets.all(30);
-  late Timer _timer;
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late double ring1PaddingValue;
+  late double ring2PaddingValue;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        setState(
-          () {
-            // Toggle padding antara 16 dan 40
-            if (_padding == const EdgeInsets.all(30)) {
-              _padding = const EdgeInsets.all(40);
-            } else {
-              _padding = const EdgeInsets.all(30);
-            }
-          },
-        );
-      },
+// Inisialisasi controller animasi
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
     );
-    Future.delayed(const Duration(seconds: 3), () {
+
+    // Inisialisasi nilai awal untuk padding
+    ring1PaddingValue = 0.0;
+    ring2PaddingValue = 0.0;
+
+    // Menunggu dan menjalankan animasi dengan delay (menggantikan setTimeout)
+    Future.delayed(const Duration(milliseconds: 100), () {
+      setState(() {
+        ring1PaddingValue += 30.0; // Sesuaikan dengan hp(5) jika diperlukan
+      });
+      _animateRing1Padding();
+    });
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      setState(() {
+        ring2PaddingValue += 30.0; // Sesuaikan dengan hp(5.5) jika diperlukan
+      });
+      _animateRing2Padding();
+    });
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.of(context).pushReplacementNamed('/home');
     });
   }
 
+  void _animateRing1Padding() {
+    // Animasi untuk ring1Padding
+    final Animation<double> animation =
+        Tween<double>(begin: ring1PaddingValue - 5.0, end: ring1PaddingValue)
+            .animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+    animation.addListener(() {
+      setState(() {
+        ring1PaddingValue = animation.value;
+      });
+    });
+    _controller.forward(from: 0.0);
+  }
+
+  void _animateRing2Padding() {
+    // Animasi untuk ring2Padding
+    final Animation<double> animation =
+        Tween<double>(begin: ring2PaddingValue - 5.5, end: ring2PaddingValue)
+            .animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+    animation.addListener(() {
+      setState(() {
+        ring2PaddingValue = animation.value;
+      });
+    });
+    _controller.forward(from: 0.0);
+  }
+
   @override
   void dispose() {
-    _timer.cancel(); // Pastikan timer dibatalkan ketika widget dihancurkan
+    _controller.dispose();
     super.dispose();
   }
 
@@ -56,18 +97,18 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: AnimatedContainer(
                   duration: const Duration(microseconds: 500),
                   curve: Curves.easeInOut,
-                  padding: _padding,
+                  padding: EdgeInsets.all(ring1PaddingValue),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius:
                         const BorderRadius.all(Radius.circular(210 / 1)),
                   ),
                   child: AnimatedContainer(
                     duration: const Duration(microseconds: 500),
-                    padding: _padding,
+                    padding: EdgeInsets.all(ring2PaddingValue),
                     curve: Curves.easeInOut,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius:
                           const BorderRadius.all(Radius.circular(170 / 1)),
                     ),
