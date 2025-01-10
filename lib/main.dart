@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:indoquran/features/SplashScreen.dart';
+import 'package:indoquran/features/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
