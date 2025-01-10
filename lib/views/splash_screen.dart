@@ -43,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen>
       });
       _animateRing2Padding();
     });
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 1), () {
       Navigator.of(context).pushReplacementNamed('/home');
     });
   }
@@ -131,8 +131,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
             Positioned(
-              bottom:
-                  40, // Adjust this to set how far from the bottom you want the text
+              bottom: 40,
               left: 0,
               right: 0,
               child: Center(
@@ -151,9 +150,10 @@ class _SplashScreenState extends State<SplashScreen>
                       "Qur`an dan Terjemahan",
                       style: GoogleFonts.quicksand(
                         textStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500),
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],

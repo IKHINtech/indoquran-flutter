@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:indoquran/widgets/nomor.dart';
 
 class InfiniteListPage extends StatelessWidget {
   final Color color;
@@ -9,15 +10,22 @@ class InfiniteListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      controller: controller,
-      // reverse: true,
-      itemBuilder: (context, index) {
-        return ListTile(
-          onTap: () {},
-          title: Text("$index"),
-        );
-      },
+    return Column(
+      children: [
+        NomorWidget(boxSize: 20),
+        Expanded(
+          child: ListView.builder(
+            controller: controller,
+            // reverse: true,
+            itemBuilder: (context, index) {
+              return ListTile(
+                onTap: () {},
+                title: Text("$index"),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
