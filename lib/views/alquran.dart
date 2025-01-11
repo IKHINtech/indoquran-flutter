@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:indoquran/providers/alquran_providers.dart';
 import 'package:indoquran/widgets/card_surat.dart';
 import 'package:indoquran/widgets/loading_surat.dart';
-import 'package:indoquran/widgets/nomor.dart';
 import 'package:provider/provider.dart';
 
 class SuratPage extends StatefulWidget {
@@ -30,6 +29,10 @@ class _SuratPageState extends State<SuratPage> {
             ? loadingSurat()
             : Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: titlePage(),
+                  ),
                   Expanded(
                     child: ListView.separated(
                       itemCount: provider.surat.length,
@@ -43,6 +46,57 @@ class _SuratPageState extends State<SuratPage> {
                 ],
               ),
       ),
+    );
+  }
+
+  Row titlePage() {
+    return Row(
+      children: [
+        const Expanded(
+          flex: 1,
+          child: Text(
+            "Al-Qur'an",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        Expanded(
+          child: SizedBox(
+            height: 35,
+            child: TextFormField(
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 5.0,
+                  horizontal: 16.0,
+                ),
+
+                hintText: 'Cari surat...', // Menambahkan hint
+                hintStyle:
+                    const TextStyle(color: Colors.grey), // Warna teks hint
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                    color:
+                        Colors.grey.shade400, // Warna border saat tidak fokus
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    color: Colors.grey, // Warna border saat fokus
+                    width: 1.0, // Ketebalan border
+                  ),
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 }
