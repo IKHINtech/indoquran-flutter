@@ -14,7 +14,6 @@ class _SuratScreenState extends State<SuratScreen> {
     return const Scaffold(
       body: Column(
         children: [
-          NomorWidget(boxSize: 20),
           Center(
             child: Text("Surat"),
           ),

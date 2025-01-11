@@ -10,22 +10,12 @@ class InfiniteListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        NomorWidget(boxSize: 20),
-        Expanded(
-          child: ListView.builder(
-            controller: controller,
-            // reverse: true,
-            itemBuilder: (context, index) {
-              return ListTile(
-                onTap: () {},
-                title: Text("$index"),
-              );
-            },
-          ),
-        ),
-      ],
+    return ListView.builder(
+      controller: controller,
+      // reverse: true,
+      itemBuilder: (context, index) {
+        return ListTile(onTap: () {}, title: NomorWidget(nomor: index));
+      },
     );
   }
 }
