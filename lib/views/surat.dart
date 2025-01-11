@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:indoquran/widgets/nomor.dart';
 
 class SuratScreen extends StatefulWidget {
   const SuratScreen({super.key});

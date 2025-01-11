@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:indoquran/const/themes.dart';
-import 'package:indoquran/views/invinite_list.dart';
+import 'package:indoquran/views/alquran.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

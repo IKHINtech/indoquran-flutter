@@ -62,32 +62,35 @@ class NomorWidget extends StatelessWidget {
   const NomorWidget({super.key, required this.nomor, this.size});
 
   final double boxSize = 40;
-  final double textSize = 20;
+  final double textSize = 13;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "$nomor",
-              style: TextStyle(
-                color: cPrimary,
-                fontSize: textSize,
+    return Container(
+      constraints: BoxConstraints(maxHeight: boxSize, maxWidth: boxSize),
+      child: Stack(
+        children: [
+          Positioned(
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                "$nomor",
+                style: TextStyle(
+                  color: cPrimary,
+                  fontSize: textSize,
+                ),
               ),
             ),
           ),
-        ),
-        SizedBox(
-          width: boxSize,
-          height: boxSize,
-          child: CustomPaint(
-            painter: CustomShapePainter(),
-          ),
-        )
-      ],
+          SizedBox(
+            width: boxSize,
+            height: boxSize,
+            child: CustomPaint(
+              painter: CustomShapePainter(),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
