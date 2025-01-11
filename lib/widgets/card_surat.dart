@@ -17,8 +17,8 @@ class SuratCard extends StatelessWidget {
           minHeight: 40,
           maxHeight: 40,
         ),
-        child: const NomorWidget(
-          nomor: 1,
+        child: NomorWidget(
+          nomor: surat.nomor,
         ),
       ),
       title: Text(

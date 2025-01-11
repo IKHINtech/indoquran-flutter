@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:indoquran/widgets/nomor.dart';
+import 'package:indoquran/widgets/placeholder.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SuratLoading extends StatelessWidget {
@@ -11,8 +12,8 @@ class SuratLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Colors.red,
-      highlightColor: Colors.yellow,
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
       child: ListTile(
         leading: Container(
           constraints: const BoxConstraints(
@@ -21,28 +22,29 @@ class SuratLoading extends StatelessWidget {
             minHeight: 40,
             maxHeight: 40,
           ),
-          child: const NomorWidget(
-            nomor: 1,
+          child: CustomPaint(
+            painter: CustomShapePainter(),
           ),
         ),
-        title: Text(
-          "title",
-          style: GoogleFonts.quicksand(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        subtitle: Text(
-          "subtitle",
-          style: GoogleFonts.quicksand(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        trailing: const Column(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("arti"),
-            Text("jumlah ayat"),
+            Expanded(flex: 2, child: placeHolder(4, 10)),
+            const Expanded(
+              flex: 3,
+              child: SizedBox(),
+            ),
+            Expanded(flex: 1, child: placeHolder(3, 8)),
+          ],
+        ),
+        subtitle: Row(
+          children: [
+            Expanded(flex: 1, child: placeHolder(4, 10)),
+            const Expanded(
+              flex: 4,
+              child: SizedBox(),
+            ),
+            Expanded(flex: 1, child: placeHolder(3, 8)),
           ],
         ),
       ),

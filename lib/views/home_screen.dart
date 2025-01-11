@@ -109,7 +109,9 @@ class _HomeScreenState extends State<HomeScreen>
           dragStartBehavior: DragStartBehavior.down,
           physics: const BouncingScrollPhysics(),
           children: colors
-              .map((e) => InfiniteListPage(controller: controller, color: e))
+              .map((e) => SuratPage(
+                    controller: controller,
+                  ))
               .toList(),
         ),
         child: TabBar(
