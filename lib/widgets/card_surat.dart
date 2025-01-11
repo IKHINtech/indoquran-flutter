@@ -33,12 +33,19 @@ class SuratCard extends StatelessWidget {
         style: GoogleFonts.quicksand(
           fontSize: 12,
           fontWeight: FontWeight.w500,
+          color: Colors.grey.shade400,
         ),
       ),
       trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(surat.nama),
-          Text("${surat.jumlahAyat.toString()} Ayat"),
+          Text(surat.nama,
+              style: GoogleFonts.quicksand(
+                  fontSize: 14, fontWeight: FontWeight.w600)),
+          Text("${surat.jumlahAyat.toString()} Ayat",
+              style: TextStyle(
+                color: Colors.grey.shade400,
+              )),
         ],
       ),
     );

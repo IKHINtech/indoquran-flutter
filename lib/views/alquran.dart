@@ -25,8 +25,8 @@ class _SuratPageState extends State<SuratPage> {
     return Consumer<SuratProvider>(
       builder: (BuildContext context, SuratProvider provider, Widget? child) =>
           Container(
-        padding: const EdgeInsets.all(10),
-        child: !provider.loading
+        padding: const EdgeInsets.all(16),
+        child: provider.loading
             ? loadingSurat()
             : Column(
                 children: [
@@ -48,6 +48,8 @@ class _SuratPageState extends State<SuratPage> {
 }
 
 Widget loadingSurat() {
-  return ListView.builder(
-      itemCount: 10, itemBuilder: (context, index) => const SuratLoading());
+  return ListView.separated(
+      separatorBuilder: (context, index) => const Divider(),
+      itemCount: 10,
+      itemBuilder: (context, index) => const SuratLoading());
 }
