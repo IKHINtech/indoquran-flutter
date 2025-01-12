@@ -28,19 +28,20 @@ class _DoaDoaaState extends State<DoaDoaScreen> {
   Widget build(BuildContext context) {
     return Consumer<DoaProvider>(
       builder: (BuildContext context, DoaProvider provider, Widget? child) =>
-          ListView.separated(
-        controller: widget.controller,
-        separatorBuilder: (BuildContext context, int index) => Divider(
-          color: Colors.grey.shade300,
-        ),
-        itemCount: provider.doaDoa.length,
-        itemBuilder: (BuildContext context, int index) => provider.loadingDoaDoa
-            ? const LoadingCardDoaDoa()
-            : DoaDoaCard(
-                index: index,
-                doa: provider.doaDoa[index],
-              ),
-      ),
+          provider.loadingDoaDoa
+              ? const LoadingCardDoaDoa()
+              : ListView.separated(
+                  controller: widget.controller,
+                  separatorBuilder: (BuildContext context, int index) =>
+                      Divider(
+                    color: Colors.grey.shade300,
+                  ),
+                  itemCount: provider.doaDoa.length,
+                  itemBuilder: (BuildContext context, int index) => DoaDoaCard(
+                    index: index,
+                    doa: provider.doaDoa[index],
+                  ),
+                ),
     );
   }
 }
@@ -97,6 +98,26 @@ class DoaDoaCard extends StatelessWidget {
         const SizedBox(height: 14),
         Text(
           doa.indo,
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Chip(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: const BorderSide(
+                color: Colors.transparent,
+              ),
+            ),
+            backgroundColor: Colors.green[100],
+            label: Text(
+              doa.source.toUpperCase(),
+              style: const TextStyle(
+                fontSize: 10,
+                color: cPrimary,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -167,10 +188,18 @@ class LoadingCardDoaDoa extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 14),
-              Row(
-                children: [
-                  Expanded(child: placeHolder(80, 10)),
-                ],
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Chip(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: const BorderSide(
+                      color: Colors.green,
+                    ),
+                  ),
+                  backgroundColor: Colors.green,
+                  label: placeHolder(30, 4),
+                ),
               ),
             ],
           ),
