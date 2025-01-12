@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:indoquran/const/themes.dart';
+import 'package:indoquran/views/doa/doa_doa.dart';
 import 'package:indoquran/views/doa/doa_harian.dart';
 
 class DoaScreen extends StatefulWidget {
@@ -121,7 +122,7 @@ class _DoaScreenState extends State<DoaScreen>
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         DoaHarianaScreen(controller: widget.controller),
-                        const Icon(Icons.directions_transit),
+                        DoaDoaScreen(controller: widget.controller),
                         const Icon(Icons.directions_bike),
                       ],
                     ),

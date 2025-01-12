@@ -42,7 +42,7 @@ class _SuratScreenState extends State<SuratScreen> {
                       ),
                       controller: widget.controller,
                       itemBuilder: (BuildContext context, int index) {
-                        return SuratCard(surat: provider.surat[index]);
+                        return SurahCard(surat: provider.surat[index]);
                       },
                     ),
                   ),

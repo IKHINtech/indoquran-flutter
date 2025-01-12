@@ -6,7 +6,7 @@ import 'dart:convert';
 
 DoaDoa doaDoaFromJson(String str) => DoaDoa.fromJson(json.decode(str));
 List<DoaDoa> doaDoaListFromJson(String str) =>
-    List<DoaDoa>.from(json.decode(str).map((x) => DoaDoa.fromJson(x)));
+    List<DoaDoa>.from(json.decode(str)["data"].map((x) => DoaDoa.fromJson(x)));
 String doaDoaToJson(DoaDoa data) => json.encode(data.toJson());
 
 class DoaDoa {
