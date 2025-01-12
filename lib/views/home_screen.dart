@@ -4,9 +4,9 @@ import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:indoquran/const/themes.dart';
-import 'package:indoquran/views/doa_screen.dart';
-import 'package:indoquran/views/surah_screen.dart';
-import 'package:indoquran/views/hadits_screen.dart';
+import 'package:indoquran/views/doa/doa_screen.dart';
+import 'package:indoquran/views/surah/surah_screen.dart';
+import 'package:indoquran/views/hadits/hadits_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen>
     Colors.yellow,
     Colors.green,
     Colors.blue,
+    Colors.pink,
     Colors.pink
   ];
 
@@ -55,9 +56,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final Color unselectedColor = colors[currentScreen].computeLuminance() < 0.5
-        ? cPrimary
-        : Colors.white;
+    final Color unselectedColor =
+        colors[currentScreen].computeLuminance() < 0.5 ? cPrimary : Colors.grey;
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
@@ -104,13 +104,16 @@ class CustomBottomBar extends StatelessWidget {
     return BottomBar(
       fit: StackFit.expand,
       icon: (width, height) => Center(
-        child: IconButton(
-          padding: EdgeInsets.zero,
-          onPressed: null,
-          icon: Icon(
-            Icons.arrow_upward_rounded,
-            color: cPrimary,
-            size: width,
+        child: Card(
+          elevation: 4,
+          child: IconButton(
+            padding: EdgeInsets.zero,
+            onPressed: null,
+            icon: Icon(
+              Icons.arrow_upward_rounded,
+              color: cPrimary,
+              size: width,
+            ),
           ),
         ),
       ),
@@ -118,7 +121,7 @@ class CustomBottomBar extends StatelessWidget {
       duration: const Duration(seconds: 1),
       curve: Curves.decelerate,
       showIcon: true,
-      width: MediaQuery.of(context).size.width * 0.8,
+      width: MediaQuery.of(context).size.width * 0.9,
       barColor: Colors.white,
       start: 2,
       end: 0,
@@ -131,21 +134,21 @@ class CustomBottomBar extends StatelessWidget {
       scrollOpposite: false,
       onBottomBarHidden: () {},
       onBottomBarShown: () {},
-      body: (context, controller) => TabBarView(
-        controller: tabController,
-        dragStartBehavior: DragStartBehavior.down,
-        physics: const BouncingScrollPhysics(),
-        children: [
+      body: (context, controller) {
+        var screens = [
           SuratScreen(controller: controller),
           HadistScreen(controller: controller),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15.0),
-            child: DoaScreen(),
-          ),
+          const DoaScreen(),
           HadistScreen(controller: controller),
           HadistScreen(controller: controller),
-        ],
-      ),
+        ];
+        return TabBarView(
+          controller: tabController,
+          dragStartBehavior: DragStartBehavior.down,
+          physics: const BouncingScrollPhysics(),
+          children: screens,
+        );
+      },
       child: Card(
         color: Colors.white,
         elevation: 3,
