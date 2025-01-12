@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:indoquran/const/themes.dart';
 import 'package:indoquran/providers/alquran_providers.dart';
+import 'package:indoquran/providers/doa_providers.dart';
 import 'package:indoquran/providers/hadits_providers.dart';
 import 'package:indoquran/views/splash_screen.dart';
 import 'package:indoquran/views/home_screen.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SuratProvider()),
+        ChangeNotifierProvider(create: (_) => DoaProvider()),
         ChangeNotifierProvider(create: (_) => HaditsProvider()),
       ],
       child: MaterialApp(
