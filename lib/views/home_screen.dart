@@ -138,7 +138,7 @@ class CustomBottomBar extends StatelessWidget {
         var screens = [
           SuratScreen(controller: controller),
           HadistScreen(controller: controller),
-          const DoaScreen(),
+          DoaScreen(controller: controller),
           HadistScreen(controller: controller),
           HadistScreen(controller: controller),
         ];

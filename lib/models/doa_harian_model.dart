@@ -5,8 +5,8 @@
 import 'dart:convert';
 
 DoaHarian doaHarianFromJson(String str) => DoaHarian.fromJson(json.decode(str));
-List<DoaHarian> doaHarianListFromJson(String str) =>
-    List<DoaHarian>.from(json.decode(str).map((x) => DoaHarian.fromJson(x)));
+List<DoaHarian> doaHarianListFromJson(String str) => List<DoaHarian>.from(
+    json.decode(str)['data'].map((x) => DoaHarian.fromJson(x)));
 String doaHarianToJson(DoaHarian data) => json.encode(data.toJson());
 
 class DoaHarian {

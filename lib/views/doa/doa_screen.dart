@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:indoquran/const/themes.dart';
+import 'package:indoquran/views/doa/doa_harian.dart';
 
 class DoaScreen extends StatefulWidget {
-  const DoaScreen({super.key});
+  final ScrollController controller;
+  const DoaScreen({super.key, required this.controller});
 
   @override
   State<DoaScreen> createState() => _DoaScreenState();
@@ -83,7 +85,7 @@ class _DoaScreenState extends State<DoaScreen>
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.all(4.0),
-                    margin: const EdgeInsets.only(top: 12),
+                    margin: const EdgeInsets.only(top: 12, bottom: 20),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade300,
                       borderRadius: BorderRadius.circular(8),
@@ -114,13 +116,13 @@ class _DoaScreenState extends State<DoaScreen>
                       ],
                     ),
                   ),
-                  const Expanded(
+                  Expanded(
                     child: TabBarView(
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       children: [
-                        Icon(Icons.directions_car),
-                        Icon(Icons.directions_transit),
-                        Icon(Icons.directions_bike),
+                        DoaHarianaScreen(controller: widget.controller),
+                        const Icon(Icons.directions_transit),
+                        const Icon(Icons.directions_bike),
                       ],
                     ),
                   ),
