@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:indoquran/const/themes.dart';
 import 'package:indoquran/providers/alquran_providers.dart';
 import 'package:indoquran/providers/hadits_providers.dart';
 import 'package:indoquran/views/splash_screen.dart';
@@ -40,6 +41,10 @@ ThemeData _buildTheme(brightness) {
   var baseTheme = ThemeData(brightness: brightness);
 
   return baseTheme.copyWith(
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: cPrimary,
+      brightness: Brightness.light,
+    ),
     textTheme: GoogleFonts.quicksandTextTheme(baseTheme.textTheme),
   );
 }

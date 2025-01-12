@@ -35,13 +35,13 @@ class _HadistScreenState extends State<HadistScreen> {
                   ),
                   Expanded(
                     child: ListView.separated(
-                      itemCount: provider.surat.length,
+                      itemCount: provider.hadits.length,
                       separatorBuilder: (context, index) =>
                           Divider(color: Colors.grey.shade300),
                       controller: widget.controller,
                       itemBuilder: (BuildContext context, int index) {
                         return HaditsCard(
-                          hadits: provider.surat[index],
+                          hadits: provider.hadits[index],
                           index: index + 1,
                         );
                       },
@@ -55,18 +55,20 @@ class _HadistScreenState extends State<HadistScreen> {
 }
 
 Row titlePage() {
-  return const Row(children: [
-    Expanded(
-      flex: 1,
-      child: Text(
-        "Hadits",
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
+  return const Row(
+    children: [
+      Expanded(
+        flex: 1,
+        child: Text(
+          "Hadits",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
-    ),
-  ]);
+    ],
+  );
 }
 
 Widget loadingHadits() {

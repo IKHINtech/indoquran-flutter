@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:indoquran/providers/alquran_providers.dart';
 import 'package:indoquran/widgets/card_surat.dart';
 import 'package:indoquran/widgets/loading_surat.dart';
 import 'package:provider/provider.dart';
 
-class SuratPage extends StatefulWidget {
+class SuratScreen extends StatefulWidget {
   final ScrollController controller;
-  const SuratPage({required this.controller, super.key});
+  const SuratScreen({required this.controller, super.key});
 
   @override
-  State<SuratPage> createState() => _SuratPageState();
+  State<SuratScreen> createState() => _SuratScreenState();
 }
 
-class _SuratPageState extends State<SuratPage> {
+class _SuratScreenState extends State<SuratScreen> {
   @override
   void initState() {
     super.initState();
@@ -31,7 +32,7 @@ class _SuratPageState extends State<SuratPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: titlePage(),
+                    child: titleScreen(),
                   ),
                   Expanded(
                     child: ListView.separated(
@@ -51,7 +52,7 @@ class _SuratPageState extends State<SuratPage> {
     );
   }
 
-  Row titlePage() {
+  Row titleScreen() {
     return Row(
       children: [
         const Expanded(
@@ -69,11 +70,14 @@ class _SuratPageState extends State<SuratPage> {
             height: 35,
             child: TextFormField(
               decoration: InputDecoration(
+                prefixIcon: Icon(
+                  TablerIcons.search,
+                  color: Colors.grey.shade300,
+                ),
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 5.0,
                   horizontal: 16.0,
                 ),
-
                 hintText: 'Cari surat...', // Menambahkan hint
                 hintStyle:
                     const TextStyle(color: Colors.grey), // Warna teks hint

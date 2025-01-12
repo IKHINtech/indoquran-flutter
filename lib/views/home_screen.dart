@@ -1,12 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:indoquran/const/themes.dart';
-import 'package:indoquran/views/alquran.dart';
+import 'package:indoquran/views/doa_screen.dart';
+import 'package:indoquran/views/surah_screen.dart';
 import 'package:indoquran/views/hadits_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -30,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     currentScreen = 0;
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 5, vsync: this);
     tabController.animation!.addListener(
       () {
         final value = tabController.animation!.value.round();
@@ -61,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen>
         : Colors.white;
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         leading: Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 0.0),
           child: Image.asset(
@@ -132,65 +132,86 @@ class CustomBottomBar extends StatelessWidget {
       onBottomBarHidden: () {},
       onBottomBarShown: () {},
       body: (context, controller) => TabBarView(
-          controller: tabController,
-          dragStartBehavior: DragStartBehavior.down,
-          physics: const BouncingScrollPhysics(),
-          children: [
-            SuratPage(controller: controller),
-            HadistScreen(controller: controller),
-            HadistScreen(controller: controller),
-            HadistScreen(controller: controller),
-          ]),
-      child: TabBar(
-        indicatorPadding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
         controller: tabController,
-        indicator: const UnderlineTabIndicator(
-            borderSide: BorderSide(
-              color: cPrimary,
-              width: 4,
-            ),
-            insets: EdgeInsets.fromLTRB(16, 0, 16, 8)),
-        tabs: const [
-          SizedBox(
-            height: 60,
-            width: 40,
-            child: Center(
-                child: Icon(
-              TablerIcons.book,
-              color: cPrimary,
-            )),
+        dragStartBehavior: DragStartBehavior.down,
+        physics: const BouncingScrollPhysics(),
+        children: [
+          SuratScreen(controller: controller),
+          HadistScreen(controller: controller),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15.0),
+            child: DoaScreen(),
           ),
-          SizedBox(
-            height: 60,
-            width: 40,
-            child: Center(
-              child: Icon(
-                TablerIcons.book_2,
-                color: cPrimary,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 60,
-            width: 40,
-            child: Center(
-              child: Icon(
-                TablerIcons.pray,
-                color: cPrimary,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 60,
-            width: 40,
-            child: Center(
-              child: Icon(
-                TablerIcons.clock_hour_5,
-                color: cPrimary,
-              ),
-            ),
-          ),
+          HadistScreen(controller: controller),
+          HadistScreen(controller: controller),
         ],
+      ),
+      child: Card(
+        color: Colors.white,
+        elevation: 3,
+        child: TabBar(
+          dividerColor: Colors.transparent,
+          indicatorPadding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
+          controller: tabController,
+          indicator: const UnderlineTabIndicator(
+              borderSide: BorderSide(
+                color: cPrimary,
+                width: 4,
+              ),
+              insets: EdgeInsets.fromLTRB(16, 0, 16, 8)),
+          tabs: const [
+            SizedBox(
+              height: 60,
+              width: 40,
+              child: Center(
+                child: Icon(
+                  TablerIcons.book,
+                  color: cPrimary,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 60,
+              width: 40,
+              child: Center(
+                child: Icon(
+                  TablerIcons.book_2,
+                  color: cPrimary,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 60,
+              width: 40,
+              child: Center(
+                child: Icon(
+                  TablerIcons.pray,
+                  color: cPrimary,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 60,
+              width: 40,
+              child: Center(
+                child: Icon(
+                  TablerIcons.clock_hour_5,
+                  color: cPrimary,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 60,
+              width: 40,
+              child: Center(
+                child: Icon(
+                  TablerIcons.bookmarks,
+                  color: cPrimary,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
