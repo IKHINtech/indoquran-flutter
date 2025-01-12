@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 class SuratPage extends StatefulWidget {
   final ScrollController controller;
-  const SuratPage({required this.controller, Key? key}) : super(key: key);
+  const SuratPage({required this.controller, super.key});
 
   @override
   State<SuratPage> createState() => _SuratPageState();
@@ -36,7 +36,9 @@ class _SuratPageState extends State<SuratPage> {
                   Expanded(
                     child: ListView.separated(
                       itemCount: provider.surat.length,
-                      separatorBuilder: (context, index) => const Divider(),
+                      separatorBuilder: (context, index) => Divider(
+                        color: Colors.grey.shade300,
+                      ),
                       controller: widget.controller,
                       itemBuilder: (BuildContext context, int index) {
                         return SuratCard(surat: provider.surat[index]);

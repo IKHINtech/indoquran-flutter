@@ -3,8 +3,8 @@ import 'package:indoquran/widgets/nomor.dart';
 import 'package:indoquran/widgets/placeholder.dart';
 import 'package:shimmer/shimmer.dart';
 
-class SuratLoading extends StatelessWidget {
-  const SuratLoading({
+class HaditsLoading extends StatelessWidget {
+  const HaditsLoading({
     super.key,
   });
 
@@ -33,7 +33,7 @@ class SuratLoading extends StatelessWidget {
               flex: 3,
               child: SizedBox(),
             ),
-            Expanded(flex: 1, child: placeHolder(3, 8)),
+            const Expanded(flex: 1, child: SizedBox()),
           ],
         ),
         subtitle: Row(
@@ -43,7 +43,7 @@ class SuratLoading extends StatelessWidget {
               flex: 4,
               child: SizedBox(),
             ),
-            Expanded(flex: 1, child: placeHolder(3, 8)),
+            const Expanded(flex: 1, child: SizedBox()),
           ],
         ),
       ),
