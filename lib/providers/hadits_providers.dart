@@ -14,11 +14,13 @@ class HaditsProvider extends ChangeNotifier {
 
   Future<void> getListHadits() async {
     try {
-      setLoading(true);
-      List<Hadits> result = await HaditsServices.getListHadits();
-      _hadits = result;
-      notifyListeners();
-      setLoading(false);
+      if (_hadits.isEmpty) {
+        setLoading(true);
+        List<Hadits> result = await HaditsServices.getListHadits();
+        _hadits = result;
+        notifyListeners();
+        setLoading(false);
+      }
     } catch (e) {
       setLoading(false);
       throw Exception(e);

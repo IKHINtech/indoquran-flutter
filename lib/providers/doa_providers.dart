@@ -35,11 +35,13 @@ class DoaProvider extends ChangeNotifier {
 
   Future<void> getListDoaHarian() async {
     try {
-      setloadingDoaHarian(true);
-      List<DoaHarian> result = await DoaServices.getListDoaHarian();
-      _doaHarian = result;
-      notifyListeners();
-      setloadingDoaHarian(false);
+      if (_doaHarian.isEmpty) {
+        setloadingDoaHarian(true);
+        List<DoaHarian> result = await DoaServices.getListDoaHarian();
+        _doaHarian = result;
+        notifyListeners();
+        setloadingDoaHarian(false);
+      }
     } catch (e) {
       setloadingDoaHarian(false);
       throw Exception(e);
@@ -48,11 +50,13 @@ class DoaProvider extends ChangeNotifier {
 
   Future<void> getListDoaDoa() async {
     try {
-      setloadingDoaDoa(true);
-      List<DoaDoa> result = await DoaServices.getListDoaDoa();
-      _doaDoa = result;
-      notifyListeners();
-      setloadingDoaDoa(false);
+      if (_doaDoa.isEmpty) {
+        setloadingDoaDoa(true);
+        List<DoaDoa> result = await DoaServices.getListDoaDoa();
+        _doaDoa = result;
+        notifyListeners();
+        setloadingDoaDoa(false);
+      }
     } catch (e) {
       setloadingDoaDoa(false);
       throw Exception(e);
@@ -61,11 +65,13 @@ class DoaProvider extends ChangeNotifier {
 
   Future<void> getListDoaTahlil() async {
     try {
-      setloadingDoaTahlil(true);
-      List<DoaTahlil> result = await DoaServices.getListDoaTahlil();
-      _doaTahlil = result;
-      notifyListeners();
-      setloadingDoaTahlil(false);
+      if (_doaTahlil.isEmpty) {
+        setloadingDoaTahlil(true);
+        List<DoaTahlil> result = await DoaServices.getListDoaTahlil();
+        _doaTahlil = result;
+        notifyListeners();
+        setloadingDoaTahlil(false);
+      }
     } catch (e) {
       setloadingDoaTahlil(false);
       throw Exception(e);

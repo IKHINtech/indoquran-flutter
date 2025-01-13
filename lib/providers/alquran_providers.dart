@@ -14,11 +14,13 @@ class SuratProvider extends ChangeNotifier {
 
   Future<void> getListSurat() async {
     try {
-      setLoading(true);
-      List<Surat> result = await AlquranServices.getListSurat();
-      _surat = result;
-      notifyListeners();
-      setLoading(false);
+      if (_surat.isEmpty) {
+        setLoading(true);
+        List<Surat> result = await AlquranServices.getListSurat();
+        _surat = result;
+        notifyListeners();
+        setLoading(false);
+      }
     } catch (e) {
       setLoading(false);
       throw Exception(e);
