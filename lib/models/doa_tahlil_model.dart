@@ -5,8 +5,8 @@
 import 'dart:convert';
 
 DoaTahlil doaTahlilFromJson(String str) => DoaTahlil.fromJson(json.decode(str));
-List<DoaTahlil> doaTahlilListFromJson(String str) =>
-    List<DoaTahlil>.from(json.decode(str).map((x) => DoaTahlil.fromJson(x)));
+List<DoaTahlil> doaTahlilListFromJson(String str) => List<DoaTahlil>.from(
+    json.decode(str)['data'].map((x) => DoaTahlil.fromJson(x)));
 String doaTahlilToJson(DoaTahlil data) => json.encode(data.toJson());
 
 class DoaTahlil {

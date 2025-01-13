@@ -3,6 +3,7 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:indoquran/const/themes.dart';
 import 'package:indoquran/views/doa/doa_doa.dart';
 import 'package:indoquran/views/doa/doa_harian.dart';
+import 'package:indoquran/views/doa/doa_tahlil.dart';
 
 class DoaScreen extends StatefulWidget {
   final ScrollController controller;
@@ -123,7 +124,7 @@ class _DoaScreenState extends State<DoaScreen>
                       children: [
                         DoaHarianaScreen(controller: widget.controller),
                         DoaDoaScreen(controller: widget.controller),
-                        const Icon(Icons.directions_bike),
+                        DoaTahlilScreen(controller: widget.controller),
                       ],
                     ),
                   ),

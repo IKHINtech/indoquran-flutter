@@ -3,33 +3,34 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:indoquran/const/themes.dart';
 import 'package:indoquran/models/doa_doa_model.dart';
+import 'package:indoquran/models/doa_tahlil_model.dart';
 import 'package:indoquran/providers/doa_providers.dart';
 import 'package:indoquran/widgets/nomor.dart';
 import 'package:indoquran/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-class DoaDoaScreen extends StatefulWidget {
+class DoaTahlilScreen extends StatefulWidget {
   final ScrollController controller;
-  const DoaDoaScreen({super.key, required this.controller});
+  const DoaTahlilScreen({super.key, required this.controller});
 
   @override
-  State<DoaDoaScreen> createState() => _DoaDoaaState();
+  State<DoaTahlilScreen> createState() => _DoaTahlilaState();
 }
 
-class _DoaDoaaState extends State<DoaDoaScreen> {
+class _DoaTahlilaState extends State<DoaTahlilScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => {context.read<DoaProvider>().getListDoaDoa()});
+    Future.microtask(() => {context.read<DoaProvider>().getListDoaTahlil()});
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<DoaProvider>(
       builder: (BuildContext context, DoaProvider provider, Widget? child) =>
-          provider.loadingDoaDoa
-              ? const LoadingCardDoaDoa()
+          provider.loadingDoaTahlil
+              ? const LoadingCardDoaTahlil()
               : ListView.separated(
                   controller: widget.controller,
                   separatorBuilder: (BuildContext context, int index) =>
@@ -37,19 +38,20 @@ class _DoaDoaaState extends State<DoaDoaScreen> {
                     color: Colors.grey.shade300,
                   ),
                   itemCount: provider.doaDoa.length,
-                  itemBuilder: (BuildContext context, int index) => DoaDoaCard(
+                  itemBuilder: (BuildContext context, int index) =>
+                      DoaTahlilCard(
                     index: index,
-                    doa: provider.doaDoa[index],
+                    doa: provider.doaTahlil[index],
                   ),
                 ),
     );
   }
 }
 
-class DoaDoaCard extends StatelessWidget {
+class DoaTahlilCard extends StatelessWidget {
   final int index;
-  final DoaDoa doa;
-  const DoaDoaCard({
+  final DoaTahlil doa;
+  const DoaTahlilCard({
     super.key,
     required this.index,
     required this.doa,
@@ -70,7 +72,7 @@ class DoaDoaCard extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                doa.judul,
+                doa.title,
                 style: const TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 14,
@@ -88,7 +90,7 @@ class DoaDoaCard extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 14),
-        Text(doa.arab,
+        Text(doa.arabic,
             textAlign: TextAlign.end,
             style: GoogleFonts.scheherazadeNew(
               fontSize: 20,
@@ -97,32 +99,11 @@ class DoaDoaCard extends StatelessWidget {
             )),
         const SizedBox(height: 14),
         Text(
-          doa.indo,
+          doa.translation,
           textAlign: TextAlign.justify,
           style: TextStyle(
             fontWeight: FontWeight.w700,
             color: Colors.grey.shade500,
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Chip(
-            visualDensity: const VisualDensity(horizontal: 0.0, vertical: -4),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              side: const BorderSide(
-                color: Colors.transparent,
-              ),
-            ),
-            backgroundColor: Colors.green[100],
-            label: Text(
-              doa.source.toUpperCase(),
-              style: const TextStyle(
-                fontSize: 10,
-                color: cPrimary,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
           ),
         ),
       ],
@@ -130,8 +111,8 @@ class DoaDoaCard extends StatelessWidget {
   }
 }
 
-class LoadingCardDoaDoa extends StatelessWidget {
-  const LoadingCardDoaDoa({
+class LoadingCardDoaTahlil extends StatelessWidget {
+  const LoadingCardDoaTahlil({
     super.key,
   });
 
@@ -192,20 +173,6 @@ class LoadingCardDoaDoa extends StatelessWidget {
                 children: [
                   Expanded(child: placeHolder(80, 10)),
                 ],
-              ),
-              const SizedBox(height: 14),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Chip(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: const BorderSide(
-                      color: Colors.green,
-                    ),
-                  ),
-                  backgroundColor: Colors.green,
-                  label: placeHolder(30, 4),
-                ),
               ),
             ],
           ),
