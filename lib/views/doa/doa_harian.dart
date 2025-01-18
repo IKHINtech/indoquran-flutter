@@ -10,8 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class DoaHarianaScreen extends StatefulWidget {
-  final ScrollController controller;
-  const DoaHarianaScreen({super.key, required this.controller});
+  final ScrollController? controller;
+  const DoaHarianaScreen({super.key, this.controller});
 
   @override
   State<DoaHarianaScreen> createState() => _DoaHarianaState();

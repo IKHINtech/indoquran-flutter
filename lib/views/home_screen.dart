@@ -58,6 +58,24 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    Widget page;
+    switch (currentScreen) {
+      case 0:
+        page = SuratScreen();
+        break;
+      case 1:
+        page = HadistScreen();
+        break;
+      case 2:
+        page = MainScreen();
+      case 3:
+        page = DoaScreen();
+      case 4:
+        page = JadwalSholatScreen();
+      default:
+        throw UnimplementedError('no widget for $currentScreen');
+    }
+
     final Color unselectedColor =
         colors[currentScreen].computeLuminance() < 0.5 ? cPrimary : Colors.grey;
     return Scaffold(
@@ -87,13 +105,78 @@ class _HomeScreenState extends State<HomeScreen>
           )
         ],
       ),
-      body: CustomBottomBar(
-        unselectedColor: unselectedColor,
-        colors: colors,
-        currentScreen: currentScreen,
-        tabController: tabController,
-        changeScreen: changeScreen,
+      body: LayoutBuilder(
+        builder: (
+          BuildContext context,
+          BoxConstraints constraints,
+        ) {
+          if (constraints.maxWidth < 450) {
+            return CustomBottomBar(
+              unselectedColor: unselectedColor,
+              colors: colors,
+              currentScreen: currentScreen,
+              tabController: tabController,
+              changeScreen: changeScreen,
+            );
+          } else {
+            return landscape(constraints, page);
+          }
+        },
       ),
+    );
+  }
+
+  Row landscape(BoxConstraints constraints, Widget page) {
+    return Row(
+      children: [
+        SafeArea(
+          child: NavigationRail(
+            extended: constraints.maxWidth >= 600,
+            destinations: [
+              NavigationRailDestination(
+                icon: Icon(
+                  TablerIcons.book,
+                  color: cPrimary,
+                ),
+                label: Text('Al-Qur`an'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(
+                  TablerIcons.book_2,
+                  color: cPrimary,
+                ),
+                label: Text('Hadits'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(
+                  TablerIcons.home_2,
+                  color: cPrimary,
+                ),
+                label: Text('Home'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(
+                  TablerIcons.pray,
+                  color: cPrimary,
+                ),
+                label: Text('Do`a'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(
+                  TablerIcons.clock_hour_5,
+                  color: cPrimary,
+                ),
+                label: Text('Jadwal Sholat'),
+              ),
+            ],
+            selectedIndex: currentScreen,
+            onDestinationSelected: (value) {
+              changeScreen(value);
+            },
+          ),
+        ),
+        Expanded(child: page)
+      ],
     );
   }
 }

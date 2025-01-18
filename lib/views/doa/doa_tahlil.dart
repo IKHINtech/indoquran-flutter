@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:indoquran/const/themes.dart';
-import 'package:indoquran/models/doa_doa_model.dart';
 import 'package:indoquran/models/doa_tahlil_model.dart';
 import 'package:indoquran/providers/doa_providers.dart';
 import 'package:indoquran/widgets/nomor.dart';
@@ -11,8 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class DoaTahlilScreen extends StatefulWidget {
-  final ScrollController controller;
-  const DoaTahlilScreen({super.key, required this.controller});
+  final ScrollController? controller;
+  const DoaTahlilScreen({super.key, this.controller});
 
   @override
   State<DoaTahlilScreen> createState() => _DoaTahlilaState();

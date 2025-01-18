@@ -6,14 +6,15 @@ import 'package:indoquran/widgets/loading_surat.dart';
 import 'package:provider/provider.dart';
 
 class SuratScreen extends StatefulWidget {
-  final ScrollController controller;
-  const SuratScreen({required this.controller, super.key});
+  final ScrollController? controller;
+  const SuratScreen({this.controller, super.key});
 
   @override
   State<SuratScreen> createState() => _SuratScreenState();
 }
 
 class _SuratScreenState extends State<SuratScreen> {
+  GlobalKey? _key;
   @override
   void initState() {
     super.initState();
@@ -35,14 +36,25 @@ class _SuratScreenState extends State<SuratScreen> {
                     child: titleScreen(),
                   ),
                   Expanded(
-                    child: ListView.separated(
-                      itemCount: provider.surat.length,
-                      separatorBuilder: (context, index) => Divider(
+                    child: AnimatedList.separated(
+                      key: _key,
+                      removedSeparatorBuilder:
+                          (BuildContext context, int index, animation) {
+                        return Divider();
+                      },
+                      initialItemCount: provider.surat.length,
+                      separatorBuilder: (context, index, animation) => Divider(
                         color: Colors.grey.shade300,
                       ),
                       controller: widget.controller,
-                      itemBuilder: (BuildContext context, int index) {
-                        return SurahCard(surat: provider.surat[index]);
+                      itemBuilder:
+                          (BuildContext context, int index, animation) {
+                        return SizeTransition(
+                          sizeFactor: animation,
+                          child: SurahCard(
+                            surat: provider.surat[index],
+                          ),
+                        );
                       },
                     ),
                   ),

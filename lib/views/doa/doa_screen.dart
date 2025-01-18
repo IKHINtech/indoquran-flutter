@@ -6,8 +6,8 @@ import 'package:indoquran/views/doa/doa_harian.dart';
 import 'package:indoquran/views/doa/doa_tahlil.dart';
 
 class DoaScreen extends StatefulWidget {
-  final ScrollController controller;
-  const DoaScreen({super.key, required this.controller});
+  final ScrollController? controller;
+  const DoaScreen({super.key, this.controller});
 
   @override
   State<DoaScreen> createState() => _DoaScreenState();

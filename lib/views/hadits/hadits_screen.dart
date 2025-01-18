@@ -5,8 +5,8 @@ import 'package:indoquran/widgets/loading_hadits.dart';
 import 'package:provider/provider.dart';
 
 class HadistScreen extends StatefulWidget {
-  final ScrollController controller;
-  const HadistScreen({super.key, required this.controller});
+  final ScrollController? controller;
+  const HadistScreen({super.key, this.controller});
 
   @override
   State<HadistScreen> createState() => _HadistScreenState();
