@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:indoquran/const/themes.dart';
 import 'package:indoquran/helpers/db_helper.dart';
+import 'package:indoquran/models/doa_doa_model.dart';
+import 'package:indoquran/providers/doa_providers.dart';
+import 'package:indoquran/repository/doa/doa_doa_repository.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -14,6 +17,7 @@ class _SplashScreenState extends State<SplashScreen>
   double ring1PaddingValue = 30.0;
   double ring2PaddingValue = 20.0;
   bool _isLoading = true;
+  final ValueNotifier<String> message = ValueNotifier<String>("init");
 
   @override
   void initState() {
@@ -26,20 +30,38 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _startSplashScreen() async {
+    _startAnimation();
+    message.value = "init database...";
     await _initializeDatabase();
+    message.value = "init doa doa...";
+    await Future.delayed(Duration(seconds: 20));
+    await _initDoaDoa();
+    message.value = "delay...";
+    await Future.delayed(Duration(seconds: 20));
     setState(() {
       _isLoading = false;
     });
-    _startAnimation();
+    //Future.delayed(const Duration(seconds: 2), () {
+    Navigator.of(context).pushReplacementNamed('/home');
+    //});
+  }
+
+  Future<void> _initDoaDoa() async {
+    try {
+      List<DoaDoa> doaList = await DoaProvider().getListDodDoaFromDB();
+      if (doaList.isEmpty) {
+        List<DoaDoa> doaListss = await DoaProvider().getListDoaDoa();
+        await DoaDoaRepository().insertListDoaDoa(doaListss);
+      }
+    } catch (e) {
+      print("Error init doa doa: $e");
+    }
   }
 
   Future<void> _initializeDatabase() async {
     try {
       // Inisialisasi database
       await DBHelper.instance.database;
-      Future.delayed(const Duration(seconds: 2), () {
-        Navigator.of(context).pushReplacementNamed('/home');
-      });
     } catch (e) {
       print("Error initializing database: $e");
     }
@@ -50,8 +72,31 @@ class _SplashScreenState extends State<SplashScreen>
       setState(() {
         ring2PaddingValue += 30.0;
       });
-      _animateRing2Padding();
+      _animateRing1Padding();
     });
+  }
+
+  void _animateRing1Padding() {
+    // Tween untuk mengatur rentang animasi
+    final Animation<double> animation = Tween<double>(
+      begin: ring2PaddingValue - 30.0, // Nilai lebih kecil
+      end: ring2PaddingValue + 30.0, // Nilai lebih besar
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut, // Animasi dengan kurva yang halus
+      ),
+    );
+
+    // Listener untuk memperbarui nilai padding
+    animation.addListener(() {
+      setState(() {
+        ring2PaddingValue = animation.value;
+      });
+    });
+
+    // Mulai animasi berulang dengan arah bolak-balik
+    _controller.repeat(reverse: true);
   }
 
   void _animateRing2Padding() {
@@ -83,53 +128,39 @@ class _SplashScreenState extends State<SplashScreen>
           children: [
             Align(
               alignment: Alignment.center,
-              child: _isLoading
-                  ? Container(
-                      height: 130,
-                      width: 130,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(130 / 2),
-                      ),
-                      child: Image.asset(
-                        'assets/images/logo_indoquran.png',
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : AnimatedContainer(
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInOut,
-                      padding: EdgeInsets.all(ring1PaddingValue),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(210 / 1)),
-                      ),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 500),
-                        padding: EdgeInsets.all(ring2PaddingValue),
-                        curve: Curves.easeInOut,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(170 / 1)),
-                        ),
-                        child: Container(
-                          height: 130,
-                          width: 130,
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(130 / 2),
-                          ),
-                          child: Image.asset(
-                            'assets/images/logo_indoquran.png',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+                padding: EdgeInsets.all(ring1PaddingValue),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius:
+                      const BorderRadius.all(Radius.circular(210 / 1)),
+                ),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 500),
+                  padding: EdgeInsets.all(ring2PaddingValue),
+                  curve: Curves.easeInOut,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius:
+                        const BorderRadius.all(Radius.circular(170 / 1)),
+                  ),
+                  child: Container(
+                    height: 130,
+                    width: 130,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(130 / 2),
                     ),
+                    child: Image.asset(
+                      'assets/images/logo_indoquran.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
             ),
             Positioned(
               bottom: 40,
@@ -160,19 +191,24 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                     if (_isLoading) ...[
                       Padding(
-                        padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                        padding: EdgeInsets.all(10),
                         child: LinearProgressIndicator(),
                       ),
-                      Text(
-                        "Loading...",
-                        style: GoogleFonts.quicksand(
-                          textStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      )
+                      ValueListenableBuilder(
+                          valueListenable: message,
+                          builder: (BuildContext context, String value, _) {
+                            return Text(
+                              value,
+                              style: GoogleFonts.quicksand(
+                                textStyle: const TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            );
+                          })
                     ]
                   ],
                 ),

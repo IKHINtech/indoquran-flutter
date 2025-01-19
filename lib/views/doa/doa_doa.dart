@@ -21,7 +21,7 @@ class _DoaDoaaState extends State<DoaDoaScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => {context.read<DoaProvider>().getListDoaDoa()});
+    Future.microtask(() => {context.read<DoaProvider>().getListDodDoaFromDB()});
   }
 
   @override

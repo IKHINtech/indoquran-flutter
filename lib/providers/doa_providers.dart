@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:indoquran/models/doa_doa_model.dart';
 import 'package:indoquran/models/doa_harian_model.dart';
 import 'package:indoquran/models/doa_tahlil_model.dart';
+import 'package:indoquran/repository/doa/doa_doa_repository.dart';
 import 'package:indoquran/services/doa_services.dart';
 
 class DoaProvider extends ChangeNotifier {
@@ -48,17 +49,33 @@ class DoaProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getListDoaDoa() async {
+  Future<List<DoaDoa>> getListDoaDoa() async {
     try {
       if (_doaDoa.isEmpty) {
         setloadingDoaDoa(true);
         List<DoaDoa> result = await DoaServices.getListDoaDoa();
+        print("ini result => ${result}");
         _doaDoa = result;
         notifyListeners();
         setloadingDoaDoa(false);
+        return result;
       }
+      return _doaDoa;
     } catch (e) {
       setloadingDoaDoa(false);
+      throw Exception(e);
+    }
+  }
+
+  Future<List<DoaDoa>> getListDodDoaFromDB() async {
+    try {
+      final doaList = await DoaDoaRepository().getDoaDoa();
+      List<DoaDoa> res = doaList.map((item) => DoaDoa.fromJson(item)).toList();
+      _doaDoa = res;
+      notifyListeners();
+      return res;
+    } catch (e) {
+      print("Error loading doa from database: $e");
       throw Exception(e);
     }
   }
