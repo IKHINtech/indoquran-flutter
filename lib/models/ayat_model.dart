@@ -18,23 +18,25 @@ class Ayat {
   });
 
   factory Ayat.fromJson(Map<String, dynamic> json) => Ayat(
-        id: json['id'],
-        nomorSurat: json['nomorSurat'],
-        nomorAyat: json['nomorAyat'],
-        teksArab: json['teksArab'],
-        teksLatin: json['teksLatin'],
-        teksIndonesia: json['teksIndonesia'],
-        audio: Map.from(json['audio']).map((k, v) => MapEntry(int.parse(k), v)),
+        id: json[AyatFields.id],
+        nomorSurat: json[AyatFields.nomorSurat],
+        nomorAyat: json[AyatFields.nomorAyat],
+        teksArab: json[AyatFields.teksArab],
+        teksLatin: json[AyatFields.teksLatin],
+        teksIndonesia: json[AyatFields.teksIndonesia],
+        audio: Map.from(json[AyatFields.audio])
+            .map((k, v) => MapEntry(int.parse(k), v)),
       );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'nomorSurat': nomorSurat,
-        'nomorAyat': nomorAyat,
-        'teksArab': teksArab,
-        'teksLatin': teksLatin,
-        'teksIndonesia': teksIndonesia,
-        'audio': Map.from(audio).map((k, v) => MapEntry(k.toString(), v)),
+        AyatFields.id: id,
+        AyatFields.nomorSurat: nomorSurat,
+        AyatFields.nomorAyat: nomorAyat,
+        AyatFields.teksArab: teksArab,
+        AyatFields.teksLatin: teksLatin,
+        AyatFields.teksIndonesia: teksIndonesia,
+        AyatFields.audio:
+            Map.from(audio).map((k, v) => MapEntry(k.toString(), v)),
       };
 }
 

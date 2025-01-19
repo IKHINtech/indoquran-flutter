@@ -23,17 +23,17 @@ class DoaDoa {
   });
 
   factory DoaDoa.fromJson(Map<String, dynamic> json) => DoaDoa(
-        arab: json["arab"],
-        indo: json["indo"],
-        judul: json["judul"],
-        source: json["source"],
+        arab: json[DoaDoaFields.arab],
+        indo: json[DoaDoaFields.indo],
+        judul: json[DoaDoaFields.judul],
+        source: json[DoaDoaFields.source],
       );
 
   Map<String, dynamic> toJson() => {
-        "arab": arab,
-        "indo": indo,
-        "judul": judul,
-        "source": source,
+        DoaDoaFields.arab: arab,
+        DoaDoaFields.indo: indo,
+        DoaDoaFields.judul: judul,
+        DoaDoaFields.source: source,
       };
 }
 

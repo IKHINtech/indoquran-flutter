@@ -23,17 +23,17 @@ class DoaTahlil {
   });
 
   factory DoaTahlil.fromJson(Map<String, dynamic> json) => DoaTahlil(
-        id: json["id"],
-        title: json["title"],
-        arabic: json["arabic"],
-        translation: json["translation"],
+        id: json[DoaTahlilFields.id],
+        title: json[DoaTahlilFields.title],
+        arabic: json[DoaTahlilFields.arabic],
+        translation: json[DoaTahlilFields.translation],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "title": title,
-        "arabic": arabic,
-        "translation": translation,
+        DoaTahlilFields.id: id,
+        DoaTahlilFields.title: title,
+        DoaTahlilFields.arabic: arabic,
+        DoaTahlilFields.translation: translation,
       };
 }
 

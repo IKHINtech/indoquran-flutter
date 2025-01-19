@@ -23,17 +23,17 @@ class DoaHarian {
   });
 
   factory DoaHarian.fromJson(Map<String, dynamic> json) => DoaHarian(
-        title: json["title"],
-        arabic: json["arabic"],
-        latin: json["latin"],
-        translation: json["translation"],
+        title: json[DoaHarianFields.title],
+        arabic: json[DoaHarianFields.arabic],
+        latin: json[DoaHarianFields.latin],
+        translation: json[DoaHarianFields.translation],
       );
 
   Map<String, dynamic> toJson() => {
-        "title": title,
-        "arabic": arabic,
-        "latin": latin,
-        "translation": translation,
+        DoaHarianFields.title: title,
+        DoaHarianFields.arabic: arabic,
+        DoaHarianFields.latin: latin,
+        DoaHarianFields.translation: translation,
       };
 }
 

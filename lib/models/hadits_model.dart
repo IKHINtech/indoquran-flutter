@@ -23,27 +23,17 @@ class Hadits {
   });
 
   factory Hadits.fromJson(Map<String, dynamic> json) => Hadits(
-        name: json["name"],
-        slug: json["slug"],
-        total: json["total"],
+        name: json[HaditsFields.name],
+        slug: json[HaditsFields.slug],
+        total: json[HaditsFields.total],
       );
 
   Map<String, dynamic> toJson() => {
-        "name": name,
-        "slug": slug,
-        "total": total,
+        HaditsFields.name: name,
+        HaditsFields.slug: slug,
+        HaditsFields.total: total,
       };
 }
-
-//await db.execute('''
-//  CREATE TABLE Hadits (
-//    id INTEGER PRIMARY KEY AUTOINCREMENT,
-//    name TEXT,
-//    slug TEXT,
-//    total INTEGER
-//  )
-//''');
-//
 
 class HaditsFields {
   static const String tableName = 'hadits';

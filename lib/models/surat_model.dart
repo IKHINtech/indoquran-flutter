@@ -35,26 +35,26 @@ class Surat {
   });
 
   factory Surat.fromJson(Map<String, dynamic> json) => Surat(
-        nomor: json["nomor"],
-        nama: json["nama"],
-        namaLatin: json["namaLatin"],
-        jumlahAyat: json["jumlahAyat"],
-        tempatTurun: json["tempatTurun"],
-        arti: json["arti"],
-        deskripsi: json["deskripsi"],
-        audioFull: Map.from(json["audioFull"])
+        nomor: json[SuratFields.id],
+        nama: json[SuratFields.nama],
+        namaLatin: json[SuratFields.namaLatin],
+        jumlahAyat: json[SuratFields.jumlahAyat],
+        tempatTurun: json[SuratFields.tempatTurun],
+        arti: json[SuratFields.arti],
+        deskripsi: json[SuratFields.deskripsi],
+        audioFull: Map.from(json[SuratFields.audioFull])
             .map((k, v) => MapEntry<String, String>(k, v)),
       );
 
   Map<String, dynamic> toJson() => {
-        "nomor": nomor,
-        "nama": nama,
-        "namaLatin": namaLatin,
-        "jumlahAyat": jumlahAyat,
-        "tempatTurun": tempatTurun,
-        "arti": arti,
-        "deskripsi": deskripsi,
-        "audioFull":
+        SuratFields.id: nomor,
+        SuratFields.nama: nama,
+        SuratFields.namaLatin: namaLatin,
+        SuratFields.jumlahAyat: jumlahAyat,
+        SuratFields.tempatTurun: tempatTurun,
+        SuratFields.arti: arti,
+        SuratFields.deskripsi: deskripsi,
+        SuratFields.audioFull:
             Map.from(audioFull).map((k, v) => MapEntry<String, dynamic>(k, v)),
       };
 }
