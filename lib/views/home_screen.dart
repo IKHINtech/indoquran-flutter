@@ -21,13 +21,7 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late int currentScreen;
   late TabController tabController;
-  final List<Color> colors = [
-    Colors.yellow,
-    Colors.green,
-    Colors.blue,
-    Colors.pink,
-    Colors.pink
-  ];
+  bool isExpanded = true;
 
   @override
   void initState() {
@@ -42,6 +36,12 @@ class _HomeScreenState extends State<HomeScreen>
       },
     );
     super.initState();
+  }
+
+  void changeExpanded() {
+    setState(() {
+      isExpanded = !isExpanded;
+    });
   }
 
   void changeScreen(int newScreen) {
@@ -61,13 +61,13 @@ class _HomeScreenState extends State<HomeScreen>
     Widget page;
     switch (currentScreen) {
       case 0:
-        page = SuratScreen();
+        page = MainScreen();
         break;
       case 1:
         page = HadistScreen();
         break;
       case 2:
-        page = MainScreen();
+        page = SuratScreen();
       case 3:
         page = DoaScreen();
       case 4:
@@ -76,15 +76,18 @@ class _HomeScreenState extends State<HomeScreen>
         throw UnimplementedError('no widget for $currentScreen');
     }
 
-    final Color unselectedColor =
-        colors[currentScreen].computeLuminance() < 0.5 ? cPrimary : Colors.grey;
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
         leading: Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 0.0),
-          child: Image.asset(
-            "assets/images/logo_indoquran.png",
+          child: InkWell(
+            onTap: () {
+              changeExpanded();
+            },
+            child: Image.asset(
+              "assets/images/logo_indoquran.png",
+            ),
           ),
         ),
         title: Text(
@@ -112,8 +115,6 @@ class _HomeScreenState extends State<HomeScreen>
         ) {
           if (constraints.maxWidth < 450) {
             return CustomBottomBar(
-              unselectedColor: unselectedColor,
-              colors: colors,
               currentScreen: currentScreen,
               tabController: tabController,
               changeScreen: changeScreen,
@@ -131,14 +132,14 @@ class _HomeScreenState extends State<HomeScreen>
       children: [
         SafeArea(
           child: NavigationRail(
-            extended: constraints.maxWidth >= 600,
+            extended: isExpanded, // constraints.maxWidth >= 600,
             destinations: [
               NavigationRailDestination(
                 icon: Icon(
-                  TablerIcons.book,
+                  TablerIcons.home_2,
                   color: cPrimary,
                 ),
-                label: Text('Al-Qur`an'),
+                label: Text('Home'),
               ),
               NavigationRailDestination(
                 icon: Icon(
@@ -149,10 +150,10 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               NavigationRailDestination(
                 icon: Icon(
-                  TablerIcons.home_2,
+                  TablerIcons.book,
                   color: cPrimary,
                 ),
-                label: Text('Home'),
+                label: Text('Al-Qur`an'),
               ),
               NavigationRailDestination(
                 icon: Icon(
@@ -184,14 +185,10 @@ class _HomeScreenState extends State<HomeScreen>
 class CustomBottomBar extends StatelessWidget {
   const CustomBottomBar(
       {super.key,
-      required this.unselectedColor,
-      required this.colors,
       required this.currentScreen,
       required this.tabController,
       required this.changeScreen});
 
-  final Color unselectedColor;
-  final List<Color> colors;
   final int currentScreen;
   final TabController tabController;
   final void Function(int newScreen) changeScreen;
@@ -234,9 +231,9 @@ class CustomBottomBar extends StatelessWidget {
       onBottomBarShown: () {},
       body: (context, controller) {
         var screens = [
-          SuratScreen(controller: controller),
-          HadistScreen(controller: controller),
           const MainScreen(),
+          HadistScreen(controller: controller),
+          SuratScreen(controller: controller),
           DoaScreen(controller: controller),
           const JadwalSholatScreen(),
         ];
@@ -275,15 +272,21 @@ class CustomBottomBar extends StatelessWidget {
                   8,
                 ),
               ),
-              tabs: const [
+              tabs: [
                 SizedBox(
                   height: 60,
                   width: 40,
                   child: Center(
                     child: Icon(
-                      TablerIcons.book,
+                      TablerIcons.home,
                       color: cPrimary,
                     ),
+
+                    //ClipRRect(
+                    //  child: Image.asset(
+                    //    "assets/images/icon.png",
+                    //  ),
+                    //),
                   ),
                 ),
                 SizedBox(
@@ -333,19 +336,22 @@ class CustomBottomBar extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: -25,
+            top: -10,
             child: FloatingActionButton(
+              elevation: 0,
+              shape: CircleBorder(
+                side: BorderSide(
+                  color: cPrimary,
+                ),
+              ),
               backgroundColor: Colors.white,
               onPressed: () {
                 changeScreen(2);
+                tabController.animateTo(2);
               },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(
-                  12,
-                ),
-                child: Image.asset(
-                  "assets/images/icon.png",
-                ),
+              child: Icon(
+                TablerIcons.book,
+                color: cPrimary,
               ),
             ),
           )

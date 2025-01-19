@@ -10,6 +10,6 @@ class JadwalSholatScreen extends StatefulWidget {
 class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Column();
   }
 }
