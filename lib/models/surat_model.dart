@@ -58,3 +58,31 @@ class Surat {
             Map.from(audioFull).map((k, v) => MapEntry<String, dynamic>(k, v)),
       };
 }
+
+//await db.execute('''
+//  CREATE TABLE Surat (
+//    nomor INTEGER PRIMARY KEY,
+//    nama TEXT,
+//    namaLatin TEXT,
+//    jumlahAyat INTEGER,
+//    tempatTurun TEXT,
+//    arti TEXT,
+//    deskripsi TEXT,
+//    audioFull TEXT
+//  )
+//''');
+//
+class SuratFields {
+  static const tableName = 'surat';
+  static const idType = 'INTEGER PRIMARY KEY';
+  static const textType = 'TEXT';
+  static const String intType = 'INTEGER';
+  static const id = 'nomor';
+  static const String nama = 'nama';
+  static const String namaLatin = 'namaLatin';
+  static const String jumlahAyat = 'jumlahAyat';
+  static const String tempatTurun = 'tempatTurun';
+  static const String arti = 'arti';
+  static const String deskripsi = 'deskripsi';
+  static const String audioFull = 'audioFull';
+}

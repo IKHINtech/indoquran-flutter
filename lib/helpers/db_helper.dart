@@ -1,16 +1,18 @@
 import 'dart:async';
+import 'package:indoquran/models/ayat_model.dart';
 import 'package:indoquran/models/doa_doa_model.dart';
 import 'package:indoquran/models/doa_harian_model.dart';
 import 'package:indoquran/models/doa_tahlil_model.dart';
 import 'package:indoquran/models/hadits_model.dart';
+import 'package:indoquran/models/surat_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBHelper {
-  static final DBHelper _instance = DBHelper._internal();
+  static final DBHelper instance = DBHelper._internal();
   static Database? _database;
 
-  factory DBHelper() => _instance;
+  factory DBHelper() => instance;
 
   DBHelper._internal();
 
@@ -71,15 +73,27 @@ class DBHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE Surat (
-        nomor INTEGER PRIMARY KEY,
-        nama TEXT,
-        namaLatin TEXT,
-        jumlahAyat INTEGER,
-        tempatTurun TEXT,
-        arti TEXT,
-        deskripsi TEXT,
-        audioFull TEXT
+      CREATE TABLE ${SuratFields.tableName} (
+        ${SuratFields.id} ${SuratFields.idType},
+        ${SuratFields.nama} ${SuratFields.textType},
+        ${SuratFields.namaLatin} ${SuratFields.textType},
+        ${SuratFields.jumlahAyat} ${SuratFields.intType},
+        ${SuratFields.tempatTurun} ${SuratFields.textType},
+        ${SuratFields.arti} ${SuratFields.textType},
+        ${SuratFields.deskripsi} ${SuratFields.textType},
+        ${SuratFields.audioFull} ${SuratFields.textType}
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE ${AyatFields.tableName} (
+        ${AyatFields.id} ${AyatFields.idType},
+        ${AyatFields.nomorSurat} ${AyatFields.intType},
+        ${AyatFields.nomorAyat} ${AyatFields.intType},
+        ${AyatFields.teksArab} ${AyatFields.textType},
+        ${AyatFields.teksLatin} ${AyatFields.textType},
+        ${AyatFields.teksIndonesia} ${AyatFields.textType},
+        ${AyatFields.audio} ${AyatFields.textType},
+        FOREIGN KEY (${AyatFields.nomorSurat}) REFERENCES ${SuratFields.tableName}(${SuratFields.id})
       )
     ''');
   }

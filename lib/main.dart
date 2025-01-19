@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
           "/home": (context) => const HomeScreen(),
         },
         theme: _buildTheme(Brightness.light),
-        home: const SplashScreen(),
+        home: SplashScreen(),
       ),
     );
   }

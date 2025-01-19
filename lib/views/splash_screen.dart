@@ -1,70 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:indoquran/const/themes.dart';
-import 'dart:async';
+import 'package:indoquran/helpers/db_helper.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
-
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late double ring1PaddingValue;
-  late double ring2PaddingValue;
+  double ring1PaddingValue = 30.0;
+  double ring2PaddingValue = 20.0;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-// Inisialisasi controller animasi
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 500),
     );
+    _startSplashScreen();
+  }
 
-    // Inisialisasi nilai awal untuk padding
-    ring1PaddingValue = 0.0;
-    ring2PaddingValue = 0.0;
-
-    // Menunggu dan menjalankan animasi dengan delay (menggantikan setTimeout)
-    Future.delayed(const Duration(milliseconds: 100), () {
-      setState(() {
-        ring1PaddingValue += 30.0; // Sesuaikan dengan hp(5) jika diperlukan
-      });
-      _animateRing1Padding();
+  Future<void> _startSplashScreen() async {
+    await _initializeDatabase();
+    setState(() {
+      _isLoading = false;
     });
+    _startAnimation();
+  }
 
-    Future.delayed(const Duration(milliseconds: 300), () {
+  Future<void> _initializeDatabase() async {
+    try {
+      // Inisialisasi database
+      await DBHelper.instance.database;
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.of(context).pushReplacementNamed('/home');
+      });
+    } catch (e) {
+      print("Error initializing database: $e");
+    }
+  }
+
+  void _startAnimation() {
+    Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
-        ring2PaddingValue += 30.0; // Sesuaikan dengan hp(5.5) jika diperlukan
+        ring2PaddingValue += 30.0;
       });
       _animateRing2Padding();
     });
-    Future.delayed(const Duration(seconds: 1), () {
-      Navigator.of(context).pushReplacementNamed('/home');
-    });
-  }
-
-  void _animateRing1Padding() {
-    // Animasi untuk ring1Padding
-    final Animation<double> animation =
-        Tween<double>(begin: ring1PaddingValue - 5.0, end: ring1PaddingValue)
-            .animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
-    animation.addListener(() {
-      setState(() {
-        ring1PaddingValue = animation.value;
-      });
-    });
-    _controller.forward(from: 0.0);
   }
 
   void _animateRing2Padding() {
-    // Animasi untuk ring2Padding
     final Animation<double> animation =
         Tween<double>(begin: ring2PaddingValue - 5.5, end: ring2PaddingValue)
             .animate(
@@ -88,47 +78,58 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: cPrimary,
+        color: cPrimary, // Warna utama splash screen
         child: Stack(
           children: [
             Align(
               alignment: Alignment.center,
-              child: Center(
-                child: AnimatedContainer(
-                  duration: const Duration(microseconds: 500),
-                  curve: Curves.easeInOut,
-                  padding: EdgeInsets.all(ring1PaddingValue),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius:
-                        const BorderRadius.all(Radius.circular(210 / 1)),
-                  ),
-                  child: AnimatedContainer(
-                    duration: const Duration(microseconds: 500),
-                    padding: EdgeInsets.all(ring2PaddingValue),
-                    curve: Curves.easeInOut,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(170 / 1)),
-                    ),
-                    child: Container(
+              child: _isLoading
+                  ? Container(
                       height: 130,
                       width: 130,
-                      padding: const EdgeInsets.all(20), // Add padding.
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(
-                            130 / 2), // Set border radius.
+                        borderRadius: BorderRadius.circular(130 / 2),
                       ),
                       child: Image.asset(
                         'assets/images/logo_indoquran.png',
                         fit: BoxFit.cover,
                       ),
+                    )
+                  : AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                      padding: EdgeInsets.all(ring1PaddingValue),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(210 / 1)),
+                      ),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        padding: EdgeInsets.all(ring2PaddingValue),
+                        curve: Curves.easeInOut,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(170 / 1)),
+                        ),
+                        child: Container(
+                          height: 130,
+                          width: 130,
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(130 / 2),
+                          ),
+                          child: Image.asset(
+                            'assets/images/logo_indoquran.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
             ),
             Positioned(
               bottom: 40,
@@ -141,9 +142,10 @@ class _SplashScreenState extends State<SplashScreen>
                       "IndoQur`an",
                       style: GoogleFonts.quicksand(
                         textStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700),
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     Text(
@@ -156,6 +158,22 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                       ),
                     ),
+                    if (_isLoading) ...[
+                      Padding(
+                        padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                        child: LinearProgressIndicator(),
+                      ),
+                      Text(
+                        "Loading...",
+                        style: GoogleFonts.quicksand(
+                          textStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      )
+                    ]
                   ],
                 ),
               ),
