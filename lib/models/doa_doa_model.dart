@@ -36,3 +36,25 @@ class DoaDoa {
         "source": source,
       };
 }
+
+//await db.execute('''
+//  CREATE TABLE DoaDoa (
+//    id INTEGER PRIMARY KEY AUTOINCREMENT,
+//    arab TEXT,
+//    indo TEXT,
+//    judul TEXT,
+//    source TEXT
+//  )
+//''');
+
+class DoaDoaFields {
+  static const String tableName = 'doa_doa';
+  static const String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+  static const String textType = 'TEXT';
+  static const String intType = 'INTEGER';
+  static const String id = 'id';
+  static const String arab = 'arab';
+  static const String indo = 'indo';
+  static const String judul = 'judul';
+  static const String source = 'source';
+}

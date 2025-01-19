@@ -34,3 +34,24 @@ class Hadits {
         "total": total,
       };
 }
+
+//await db.execute('''
+//  CREATE TABLE Hadits (
+//    id INTEGER PRIMARY KEY AUTOINCREMENT,
+//    name TEXT,
+//    slug TEXT,
+//    total INTEGER
+//  )
+//''');
+//
+
+class HaditsFields {
+  static const String tableName = 'hadits';
+  static const String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+  static const String textType = 'TEXT';
+  static const String intType = 'INTEGER';
+  static const String id = 'id';
+  static const String name = 'name';
+  static const String slug = 'slug';
+  static const String total = 'total';
+}

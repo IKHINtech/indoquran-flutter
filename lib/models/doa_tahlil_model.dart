@@ -36,3 +36,24 @@ class DoaTahlil {
         "translation": translation,
       };
 }
+
+//await db.execute('''
+//  CREATE TABLE DoaTahlil (
+//    id INTEGER PRIMARY KEY,
+//    title TEXT,
+//    arabic TEXT,
+//    translation TEXT
+//  )
+//''');
+//
+//
+class DoaTahlilFields {
+  static const String tableName = 'doa_tahlil';
+  static const String idType = 'INTEGER PRIMARY KEY';
+  static const String textType = 'TEXT';
+  static const String intType = 'INTEGER';
+  static const String id = 'id';
+  static const String title = 'title';
+  static const String arabic = 'arabic';
+  static const String translation = 'translation';
+}

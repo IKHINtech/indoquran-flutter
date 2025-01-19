@@ -36,3 +36,26 @@ class DoaHarian {
         "translation": translation,
       };
 }
+
+//await db.execute('''
+//  CREATE TABLE DoaHarian (
+//    id INTEGER PRIMARY KEY AUTOINCREMENT,
+//    title TEXT,
+//    arabic TEXT,
+//    latin TEXT,
+//    translation TEXT
+//  )
+//''');
+//
+
+class DoaHarianFields {
+  static const String tableName = 'doa_harian';
+  static const String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+  static const String textType = 'TEXT';
+  static const String intType = 'INTEGER';
+  static const String id = 'id';
+  static const String title = 'title';
+  static const String arabic = 'arabic';
+  static const String latin = 'latin';
+  static const String translation = 'translation';
+}
