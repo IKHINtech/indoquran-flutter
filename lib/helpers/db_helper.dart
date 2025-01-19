@@ -33,6 +33,11 @@ class DBHelper {
     );
   }
 
+  Future close() async {
+    final db = await instance.database;
+    db.close();
+  }
+
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE  ${DoaDoaFields.tableName}(

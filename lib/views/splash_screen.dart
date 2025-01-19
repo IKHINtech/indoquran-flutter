@@ -5,7 +5,7 @@ import 'package:indoquran/helpers/db_helper.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen>
