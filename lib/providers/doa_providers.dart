@@ -54,7 +54,6 @@ class DoaProvider extends ChangeNotifier {
       if (_doaDoa.isEmpty) {
         setloadingDoaDoa(true);
         List<DoaDoa> result = await DoaServices.getListDoaDoa();
-        print("ini result => ${result}");
         _doaDoa = result;
         notifyListeners();
         setloadingDoaDoa(false);
