@@ -21,7 +21,7 @@ class _DoaHarianaState extends State<DoaHarianaScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => {context.read<DoaProvider>().getListDoaHarian()});
+    //Future.microtask(() => {context.read<DoaProvider>().getListDoaHarian()});
   }
 
   @override

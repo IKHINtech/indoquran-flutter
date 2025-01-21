@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:indoquran/models/hadits_model.dart';
+import 'package:indoquran/repository/hadits/hadits_repository.dart';
 import 'package:indoquran/services/hadits_services.dart';
 
 class HaditsProvider extends ChangeNotifier {
@@ -23,6 +24,29 @@ class HaditsProvider extends ChangeNotifier {
       }
     } catch (e) {
       setLoading(false);
+      throw Exception(e);
+    }
+  }
+
+  Future<List<Hadits>> getListHaditsFromDB() async {
+    try {
+      setLoading(true);
+      final doaList = await HaditsRepository().getHadits();
+      List<Hadits> res = doaList.map((item) => Hadits.fromJson(item)).toList();
+      if (res.isEmpty) {
+        List<Hadits> result = await HaditsServices.getListHadits();
+        await HaditsRepository().insertListHadits(result);
+        _hadits = result;
+      } else {
+        _hadits = res;
+      }
+      notifyListeners();
+
+      setLoading(false);
+      return res;
+    } catch (e) {
+      setLoading(false);
+      print("Error loading doa from database: $e");
       throw Exception(e);
     }
   }

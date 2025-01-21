@@ -16,7 +16,7 @@ class _HadistScreenState extends State<HadistScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => {context.read<HaditsProvider>().getListHadits()});
+    //Future.microtask(() => {context.read<HaditsProvider>().getListHadits()});
   }
 
   @override

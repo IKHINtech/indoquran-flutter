@@ -3,6 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:indoquran/const/themes.dart';
 import 'dart:async';
 
+import 'package:indoquran/providers/alquran_providers.dart';
+import 'package:indoquran/providers/doa_providers.dart';
+import 'package:indoquran/providers/hadits_providers.dart';
+import 'package:provider/provider.dart';
+
 class SplashScreenV1 extends StatefulWidget {
   const SplashScreenV1({super.key});
 
@@ -19,6 +24,15 @@ class _SplashScreenV1State extends State<SplashScreenV1>
   @override
   void initState() {
     super.initState();
+    Future.microtask(
+        () => {context.read<SuratProvider>().getListSuratFromDB()});
+    Future.microtask(
+        () => {context.read<HaditsProvider>().getListHaditsFromDB()});
+    Future.microtask(() => {context.read<DoaProvider>().getListDoaDoaFromDB()});
+    Future.microtask(
+        () => {context.read<DoaProvider>().getListDoaTahlilFromDB()});
+    Future.microtask(
+        () => {context.read<DoaProvider>().getListDoaHarianFromDB()});
 // Inisialisasi controller animasi
     _controller = AnimationController(
       vsync: this,

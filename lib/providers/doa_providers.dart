@@ -3,6 +3,8 @@ import 'package:indoquran/models/doa_doa_model.dart';
 import 'package:indoquran/models/doa_harian_model.dart';
 import 'package:indoquran/models/doa_tahlil_model.dart';
 import 'package:indoquran/repository/doa/doa_doa_repository.dart';
+import 'package:indoquran/repository/doa/doa_harian_repository.dart';
+import 'package:indoquran/repository/doa/doa_tahlil_repository.dart';
 import 'package:indoquran/services/doa_services.dart';
 
 class DoaProvider extends ChangeNotifier {
@@ -49,6 +51,30 @@ class DoaProvider extends ChangeNotifier {
     }
   }
 
+  Future<List<DoaHarian>> getListDoaHarianFromDB() async {
+    try {
+      setloadingDoaHarian(true);
+      final doaList = await DoaHarianRepository().getDoaHarian();
+      List<DoaHarian> res =
+          doaList.map((item) => DoaHarian.fromJson(item)).toList();
+      if (res.isEmpty) {
+        List<DoaHarian> result = await DoaServices.getListDoaHarian();
+        await DoaHarianRepository().insertListDoaHarian(result);
+        _doaHarian = result;
+      } else {
+        _doaHarian = res;
+      }
+      notifyListeners();
+
+      setloadingDoaHarian(false);
+      return res;
+    } catch (e) {
+      setloadingDoaHarian(false);
+      print("Error loading doa from database: $e");
+      throw Exception(e);
+    }
+  }
+
   Future<List<DoaDoa>> getListDoaDoa() async {
     try {
       if (_doaDoa.isEmpty) {
@@ -66,7 +92,7 @@ class DoaProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<DoaDoa>> getListDodDoaFromDB() async {
+  Future<List<DoaDoa>> getListDoaDoaFromDB() async {
     try {
       final doaList = await DoaDoaRepository().getDoaDoa();
       List<DoaDoa> res = doaList.map((item) => DoaDoa.fromJson(item)).toList();
@@ -90,6 +116,30 @@ class DoaProvider extends ChangeNotifier {
       }
     } catch (e) {
       setloadingDoaTahlil(false);
+      throw Exception(e);
+    }
+  }
+
+  Future<List<DoaTahlil>> getListDoaTahlilFromDB() async {
+    try {
+      setloadingDoaTahlil(true);
+      final doaList = await DoaTahlilRepository().getDoaTahlil();
+      List<DoaTahlil> res =
+          doaList.map((item) => DoaTahlil.fromJson(item)).toList();
+      if (res.isEmpty) {
+        List<DoaTahlil> result = await DoaServices.getListDoaTahlil();
+        await DoaTahlilRepository().insertListDoaTahlil(result);
+        _doaTahlil = result;
+      } else {
+        _doaTahlil = res;
+      }
+      notifyListeners();
+
+      setloadingDoaTahlil(false);
+      return res;
+    } catch (e) {
+      setloadingDoaTahlil(false);
+      print("Error loading doa from database: $e");
       throw Exception(e);
     }
   }

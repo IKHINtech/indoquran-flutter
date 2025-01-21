@@ -18,7 +18,7 @@ class _SuratScreenState extends State<SuratScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => {context.read<SuratProvider>().getListSurat()});
+    //Future.microtask(() => {context.read<SuratProvider>().getListSurat()});
   }
 
   @override

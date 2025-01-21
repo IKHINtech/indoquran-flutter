@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _initDoaDoa() async {
     try {
-      List<DoaDoa> doaList = await DoaProvider().getListDodDoaFromDB();
+      List<DoaDoa> doaList = await DoaProvider().getListDoaDoaFromDB();
       if (doaList.isEmpty) {
         List<DoaDoa> doaListss = await DoaProvider().getListDoaDoa();
         await DoaDoaRepository().insertListDoaDoa(doaListss);

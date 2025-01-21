@@ -21,7 +21,7 @@ class _DoaTahlilaState extends State<DoaTahlilScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => {context.read<DoaProvider>().getListDoaTahlil()});
+    //Future.microtask(() => {context.read<DoaProvider>().getListDoaTahlil()});
   }
 
   @override
