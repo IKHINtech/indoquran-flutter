@@ -21,7 +21,7 @@ class Surat {
   final String tempatTurun;
   final String arti;
   final String deskripsi;
-  final Map<String, String> audioFull;
+  //final Map<String, String> audioFull;
 
   Surat({
     required this.nomor,
@@ -31,7 +31,7 @@ class Surat {
     required this.tempatTurun,
     required this.arti,
     required this.deskripsi,
-    required this.audioFull,
+    //required this.audioFull,
   });
 
   factory Surat.fromJson(Map<String, dynamic> json) => Surat(
@@ -42,8 +42,8 @@ class Surat {
         tempatTurun: json[SuratFields.tempatTurun],
         arti: json[SuratFields.arti],
         deskripsi: json[SuratFields.deskripsi],
-        audioFull: Map.from(json[SuratFields.audioFull])
-            .map((k, v) => MapEntry<String, String>(k, v)),
+        //audioFull: Map.from(json[SuratFields.audioFull])
+        //    .map((k, v) => MapEntry<String, String>(k, v)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -54,8 +54,8 @@ class Surat {
         SuratFields.tempatTurun: tempatTurun,
         SuratFields.arti: arti,
         SuratFields.deskripsi: deskripsi,
-        SuratFields.audioFull:
-            Map.from(audioFull).map((k, v) => MapEntry<String, dynamic>(k, v)),
+        //SuratFields.audioFull:
+        //    Map.from(audioFull).map((k, v) => MapEntry<String, dynamic>(k, v)),
       };
 }
 

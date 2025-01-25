@@ -21,28 +21,39 @@ class _DoaTahlilaState extends State<DoaTahlilScreen> {
   @override
   void initState() {
     super.initState();
-    //Future.microtask(() => {context.read<DoaProvider>().getListDoaTahlil()});
+    //Future.microtask(
+    //    () => {context.read<DoaProvider>().getListDoaTahlilFromDB()});
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<DoaProvider>(
-      builder: (BuildContext context, DoaProvider provider, Widget? child) =>
-          provider.loadingDoaTahlil
-              ? const LoadingCardDoaTahlil()
-              : ListView.separated(
-                  controller: widget.controller,
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(
-                    color: Colors.grey.shade300,
-                  ),
-                  itemCount: provider.doaDoa.length,
-                  itemBuilder: (BuildContext context, int index) =>
-                      DoaTahlilCard(
-                    index: index,
-                    doa: provider.doaTahlil[index],
-                  ),
-                ),
+      builder: (BuildContext context, DoaProvider provider, Widget? _) {
+        return provider.loadingDoaTahlil
+            ? LoadingCardDoaTahlil()
+            : provider.doaTahlil.isNotEmpty
+                ? ListView.separated(
+                    controller: widget.controller,
+                    separatorBuilder: (BuildContext context, int index) =>
+                        Divider(
+                      color: Colors.grey.shade300,
+                    ),
+                    itemCount: provider.doaDoa.length,
+                    itemBuilder: (BuildContext context, int index) =>
+                        DoaTahlilCard(
+                      index: index,
+                      doa: provider.doaTahlil[index],
+                    ),
+                  )
+                : Center(
+                    child: Text(
+                      'No Data',
+                      style: GoogleFonts.montserrat(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  );
+      },
     );
   }
 }

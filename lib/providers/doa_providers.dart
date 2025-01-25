@@ -64,9 +64,8 @@ class DoaProvider extends ChangeNotifier {
       } else {
         _doaHarian = res;
       }
-      notifyListeners();
-
       setloadingDoaHarian(false);
+      notifyListeners();
       return res;
     } catch (e) {
       setloadingDoaHarian(false);
@@ -94,9 +93,17 @@ class DoaProvider extends ChangeNotifier {
 
   Future<List<DoaDoa>> getListDoaDoaFromDB() async {
     try {
+      setloadingDoaDoa(true);
       final doaList = await DoaDoaRepository().getDoaDoa();
       List<DoaDoa> res = doaList.map((item) => DoaDoa.fromJson(item)).toList();
-      _doaDoa = res;
+      if (res.isEmpty) {
+        List<DoaDoa> result = await DoaServices.getListDoaDoa();
+        await DoaDoaRepository().insertListDoaDoa(result);
+        _doaDoa = result;
+      } else {
+        _doaDoa = res;
+      }
+      setloadingDoaDoa(false);
       notifyListeners();
       return res;
     } catch (e) {
@@ -133,9 +140,8 @@ class DoaProvider extends ChangeNotifier {
       } else {
         _doaTahlil = res;
       }
-      notifyListeners();
-
       setloadingDoaTahlil(false);
+      notifyListeners();
       return res;
     } catch (e) {
       setloadingDoaTahlil(false);
