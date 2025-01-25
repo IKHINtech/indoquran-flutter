@@ -1,11 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:indoquran/models/surat_model.dart';
+import 'package:go_router/go_router.dart';
+import 'package:indoquran/providers/alquran_providers.dart';
+import 'package:indoquran/widgets/placeholder.dart';
+import 'package:provider/provider.dart';
 
 class SurahDetailScreen extends StatefulWidget {
-  final Surat surah;
-  const SurahDetailScreen({super.key, required this.surah});
+  final String? id;
+  const SurahDetailScreen({super.key, this.id});
 
   @override
   State<SurahDetailScreen> createState() => _SurahDetailScreenState();
@@ -19,6 +22,9 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   @override
   void initState() {
     super.initState();
+    Future.microtask(
+      () => context.read<SuratProvider>().getDetailSurah(widget.id),
+    );
     _scrollController = ScrollController()
       ..addListener(() {
         _scrollListener();
@@ -48,151 +54,179 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var titleContent = [
-      SurahTempatTurunImage(
-        tempatTurun: widget.surah.tempatTurun,
-        height: 50,
-        width: 50,
-      ),
-      Text(
-        widget.surah.namaLatin,
-        textScaler: TextScaler.linear(1),
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 14,
-        ),
-      ),
-      SizedBox(
-        height: 4,
-      ),
-      Text(
-        "${widget.surah.jumlahAyat} Ayat, ${widget.surah.arti}",
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-          color: Colors.grey.shade400,
-        ),
-      )
-    ];
-    return Scaffold(
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: <Widget>[
-          SliverAppBar(
-            // show and hide SliverAppBar Title
-            title: _isSliverAppBarExpanded
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SurahTempatTurunImage(
-                        tempatTurun: widget.surah.tempatTurun,
-                        height: 20,
-                        width: 20,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        widget.surah.namaLatin,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "${widget.surah.jumlahAyat} Ayat, ${widget.surah.arti}",
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey.shade400,
-                        ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didpop, _) async {
+        context.go("/home");
+      },
+      child: Scaffold(
+        body: Consumer<SuratProvider>(
+          builder:
+              (BuildContext context, SuratProvider provider, Widget? child) =>
+                  CustomScrollView(
+            controller: _scrollController,
+            slivers: <Widget>[
+              SliverAppBar(
+                // show and hide SliverAppBar Title
+                title: _isSliverAppBarExpanded
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          provider.loadingDetail
+                              ? placeHolder(20, 20)
+                              : SurahTempatTurunImage(
+                                  tempatTurun:
+                                      provider.suratDetail!.tempatTurun,
+                                  height: 20,
+                                  width: 20,
+                                ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          provider.loadingDetail
+                              ? placeHolder(20, 10)
+                              : Text(
+                                  provider.suratDetail!.namaLatin,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          provider.loadingDetail
+                              ? placeHolder(20, 10)
+                              : Text(
+                                  "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey.shade400,
+                                  ),
+                                )
+                        ],
                       )
-                    ],
-                  )
-                : null,
-            pinned: true,
-            snap: false,
-            floating: false,
-            expandedHeight: kExpandedHeight,
-            // show and hide FlexibleSpaceBar title
-            flexibleSpace: _isSliverAppBarExpanded
-                ? null
-                : FlexibleSpaceBar(
-                    centerTitle: true,
-                    title: Center(
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 500),
-                        child: isScrolled
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 80,
-                                  ),
-                                  SurahTempatTurunImage(
-                                    tempatTurun: widget.surah.tempatTurun,
-                                    height: 30,
-                                    width: 30,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    widget.surah.namaLatin,
-                                    textScaler: TextScaler.linear(1),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    "${widget.surah.jumlahAyat} Ayat, ${widget.surah.arti}",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey.shade400,
-                                    ),
+                    : null,
+                pinned: true,
+                snap: false,
+                floating: false,
+                expandedHeight: kExpandedHeight,
+                // show and hide FlexibleSpaceBar title
+                flexibleSpace: _isSliverAppBarExpanded
+                    ? null
+                    : FlexibleSpaceBar(
+                        centerTitle: true,
+                        title: Center(
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 500),
+                            child: isScrolled
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 80,
+                                      ),
+                                      provider.loadingDetail
+                                          ? placeHolder(30, 30)
+                                          : SurahTempatTurunImage(
+                                              tempatTurun: provider
+                                                  .suratDetail!.tempatTurun,
+                                              height: 30,
+                                              width: 30,
+                                            ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      provider.loadingDetail
+                                          ? placeHolder(30, 10)
+                                          : Text(
+                                              provider.suratDetail!.namaLatin,
+                                              textScaler: TextScaler.linear(1),
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      provider.loadingDetail
+                                          ? placeHolder(30, 10)
+                                          : Text(
+                                              "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.grey.shade400,
+                                              ),
+                                            )
+                                    ],
                                   )
-                                ],
-                              )
-                            : Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: titleContent,
-                              ),
+                                : provider.loadingDetail
+                                    ? placeHolder(30, 30)
+                                    : Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          SurahTempatTurunImage(
+                                            tempatTurun: provider
+                                                .suratDetail!.tempatTurun,
+                                            height: 50,
+                                            width: 50,
+                                          ),
+                                          Text(
+                                            provider.suratDetail!.namaLatin,
+                                            textScaler: TextScaler.linear(1),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 4,
+                                          ),
+                                          Text(
+                                            "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.grey.shade400,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                          ),
+                        ),
+                        //background: Image.asset(
+                        //  'assets/images/newBeach.jpg',
+                        //  fit: BoxFit.fill,
+                        //),
                       ),
-                    ),
-                    //background: Image.asset(
-                    //  'assets/images/newBeach.jpg',
-                    //  fit: BoxFit.fill,
-                    //),
-                  ),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (_, int index) {
+                    return ListTile(
+                      leading: Container(
+                        margin: const EdgeInsets.all(8.0),
+                        color: Colors.primaries[
+                            Random().nextInt(Colors.primaries.length)],
+                        padding: const EdgeInsets.all(8),
+                        width: 100,
+                      ),
+                      title: Text('Place ${index + 1}', textScaleFactor: 1.5),
+                    );
+                  },
+                  childCount: 20,
+                ),
+              ),
+            ],
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (_, int index) {
-                return ListTile(
-                  leading: Container(
-                    margin: const EdgeInsets.all(8.0),
-                    color: Colors
-                        .primaries[Random().nextInt(Colors.primaries.length)],
-                    padding: const EdgeInsets.all(8),
-                    width: 100,
-                  ),
-                  title: Text('Place ${index + 1}', textScaleFactor: 1.5),
-                );
-              },
-              childCount: 20,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

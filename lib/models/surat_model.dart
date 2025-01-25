@@ -4,7 +4,9 @@
 
 import 'dart:convert';
 
-Surat suratFromJson(String str) => Surat.fromJson(json.decode(str));
+import 'package:indoquran/models/ayat_model.dart';
+
+Surat suratFromJson(String str) => Surat.fromJson(json.decode(str)['data']);
 
 List<Surat> suratListFromJson(String str) {
   List data = json.decode(str)['data'];
@@ -22,6 +24,7 @@ class Surat {
   final String arti;
   final String deskripsi;
   //final Map<String, String> audioFull;
+  final List<Ayat>? ayat;
 
   Surat({
     required this.nomor,
@@ -31,17 +34,19 @@ class Surat {
     required this.tempatTurun,
     required this.arti,
     required this.deskripsi,
-    //required this.audioFull,
+    //required this.audioFull,\
+    this.ayat,
   });
 
   factory Surat.fromJson(Map<String, dynamic> json) => Surat(
-        nomor: json[SuratFields.id],
+        nomor: json["nomor"],
         nama: json[SuratFields.nama],
         namaLatin: json[SuratFields.namaLatin],
         jumlahAyat: json[SuratFields.jumlahAyat],
         tempatTurun: json[SuratFields.tempatTurun],
         arti: json[SuratFields.arti],
         deskripsi: json[SuratFields.deskripsi],
+        ayat: json['ayat'] != null ? ayatListFromJson(json['ayat']) : null,
         //audioFull: Map.from(json[SuratFields.audioFull])
         //    .map((k, v) => MapEntry<String, String>(k, v)),
       );

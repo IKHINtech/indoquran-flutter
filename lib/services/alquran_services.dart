@@ -21,14 +21,15 @@ class AlquranServices {
     }
   }
 
-  static Future<List<Surat>> getDetailSurat(int nomorSurat) async {
+  static Future<Surat> getDetailSurat(String nomorSurat) async {
     try {
       final alquranAPI = dotenv.get("API_1");
       final Dio api = ClientApi(baseUrl: alquranAPI).dio;
       Response response = await api.get(
         '/surat/$nomorSurat',
       );
-      final result = suratListFromJson(response.data);
+      print("ini result =>${response.data}");
+      final result = suratFromJson(response.data);
       return result;
     } catch (e) {
       log(e.toString());

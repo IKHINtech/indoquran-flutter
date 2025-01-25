@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:indoquran/providers/alquran_providers.dart';
-import 'package:indoquran/views/surah/surah_detail.dart';
 import 'package:indoquran/widgets/card_surat.dart';
 import 'package:indoquran/widgets/loading_surat.dart';
 import 'package:provider/provider.dart';
@@ -54,9 +54,12 @@ class _SuratScreenState extends State<SuratScreen> {
                           sizeFactor: animation,
                           child: SurahCard(
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SurahDetailScreen(
-                                      surah: provider.surat[index])));
+                              context.goNamed(
+                                "quran_detail",
+                                pathParameters: {
+                                  "id": provider.surat[index].nomor.toString(),
+                                },
+                              );
                             },
                             surat: provider.surat[index],
                           ),

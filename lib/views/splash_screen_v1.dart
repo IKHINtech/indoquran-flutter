@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:indoquran/const/themes.dart';
 import 'dart:async';
@@ -58,7 +59,7 @@ class _SplashScreenV1State extends State<SplashScreenV1>
       _animateRing2Padding();
     });
     Future.delayed(const Duration(seconds: 1), () {
-      Navigator.of(context).pushReplacementNamed('/home');
+      context.go('/home');
     });
   }
 
