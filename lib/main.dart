@@ -6,6 +6,8 @@ import 'package:indoquran/const/themes.dart';
 import 'package:indoquran/providers/alquran_providers.dart';
 import 'package:indoquran/providers/doa_providers.dart';
 import 'package:indoquran/providers/hadits_providers.dart';
+import 'package:indoquran/views/doa/doa_screen.dart';
+import 'package:indoquran/views/hadits/hadits_screen.dart';
 import 'package:indoquran/views/home_screen.dart';
 import 'package:indoquran/views/splash_screen_v1.dart';
 import 'package:indoquran/views/surah/surah_detail.dart';
@@ -24,9 +26,14 @@ final router = GoRouter(
       builder: (_, __) => SplashScreenV1(),
     ),
     GoRoute(
-      path: '/home',
-      builder: (_, __) => HomeScreen(),
-    ),
+        path: '/home',
+        name: "home",
+        builder: (_, state) {
+          Map<String, String> params = state.uri.queryParameters;
+          return HomeScreen(
+            currentScreen: int.parse(params['currentScreen'] ?? '0'),
+          );
+        }),
     GoRoute(
       path: '/quran',
       name: "surah_list",
@@ -40,6 +47,25 @@ final router = GoRouter(
           ),
         ),
       ],
+    ),
+    GoRoute(
+      path: '/hadits',
+      name: "hadits_list",
+      builder: (_, __) => HadistScreen(),
+      routes: [
+        GoRoute(
+          path: 'hadits/:id',
+          name: 'hadits_detail',
+          builder: (_, state) => SurahDetailScreen(
+            id: state.pathParameters['id'] ?? '1',
+          ),
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/doa',
+      name: "doa_list",
+      builder: (_, __) => DoaScreen(),
     ),
   ],
 );

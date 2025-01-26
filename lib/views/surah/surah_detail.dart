@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:indoquran/providers/alquran_providers.dart';
 import 'package:indoquran/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SurahDetailScreen extends StatefulWidget {
   final String? id;
@@ -57,7 +58,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didpop, _) async {
-        context.go("/home");
+        context.goNamed("home", queryParameters: {"currentScreen": "2"});
       },
       child: Scaffold(
         body: Consumer<SuratProvider>(
@@ -74,7 +75,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           provider.loadingDetail
-                              ? placeHolder(20, 20)
+                              ? Shimmer.fromColors(
+                                  baseColor: Colors.grey.shade300,
+                                  highlightColor: Colors.grey.shade100,
+                                  child: placeHolder(20, 20),
+                                )
                               : SurahTempatTurunImage(
                                   tempatTurun:
                                       provider.suratDetail!.tempatTurun,
@@ -85,7 +90,10 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                             width: 10,
                           ),
                           provider.loadingDetail
-                              ? placeHolder(20, 10)
+                              ? Shimmer.fromColors(
+                                  baseColor: Colors.grey.shade300,
+                                  highlightColor: Colors.grey.shade100,
+                                  child: placeHolder(20, 10))
                               : Text(
                                   provider.suratDetail!.namaLatin,
                                   textAlign: TextAlign.center,
@@ -97,7 +105,10 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                             width: 10,
                           ),
                           provider.loadingDetail
-                              ? placeHolder(20, 10)
+                              ? Shimmer.fromColors(
+                                  baseColor: Colors.grey.shade300,
+                                  highlightColor: Colors.grey.shade100,
+                                  child: placeHolder(20, 10))
                               : Text(
                                   "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
                                   style: TextStyle(
@@ -131,7 +142,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                                         width: 80,
                                       ),
                                       provider.loadingDetail
-                                          ? placeHolder(30, 30)
+                                          ? Shimmer.fromColors(
+                                              baseColor: Colors.grey.shade300,
+                                              highlightColor:
+                                                  Colors.grey.shade100,
+                                              child: placeHolder(30, 30))
                                           : SurahTempatTurunImage(
                                               tempatTurun: provider
                                                   .suratDetail!.tempatTurun,
@@ -142,7 +157,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                                         width: 10,
                                       ),
                                       provider.loadingDetail
-                                          ? placeHolder(30, 10)
+                                          ? Shimmer.fromColors(
+                                              baseColor: Colors.grey.shade300,
+                                              highlightColor:
+                                                  Colors.grey.shade100,
+                                              child: placeHolder(30, 10))
                                           : Text(
                                               provider.suratDetail!.namaLatin,
                                               textScaler: TextScaler.linear(1),
@@ -155,7 +174,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                                         width: 10,
                                       ),
                                       provider.loadingDetail
-                                          ? placeHolder(30, 10)
+                                          ? Shimmer.fromColors(
+                                              baseColor: Colors.grey.shade300,
+                                              highlightColor:
+                                                  Colors.grey.shade100,
+                                              child: placeHolder(30, 10))
                                           : Text(
                                               "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
                                               style: TextStyle(
@@ -167,7 +190,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                                     ],
                                   )
                                 : provider.loadingDetail
-                                    ? placeHolder(30, 30)
+                                    ? Shimmer.fromColors(
+                                        baseColor: Colors.grey.shade300,
+                                        highlightColor: Colors.grey.shade100,
+                                        child: placeHolder(30, 30),
+                                      )
                                     : Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,

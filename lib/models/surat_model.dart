@@ -46,7 +46,7 @@ class Surat {
         tempatTurun: json[SuratFields.tempatTurun],
         arti: json[SuratFields.arti],
         deskripsi: json[SuratFields.deskripsi],
-        ayat: json['ayat'] != null ? ayatListFromJson(json['ayat']) : null,
+        //ayat: json['ayat'] != null ? ayatListFromJson(json['ayat']) : null,
         //audioFull: Map.from(json[SuratFields.audioFull])
         //    .map((k, v) => MapEntry<String, String>(k, v)),
       );

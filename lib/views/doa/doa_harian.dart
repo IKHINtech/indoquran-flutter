@@ -129,8 +129,8 @@ class LoadingCardDoaHarian extends StatelessWidget {
       ),
       itemBuilder: (context, int index) {
         return Shimmer.fromColors(
-          baseColor: Colors.grey.shade300,
           highlightColor: Colors.grey.shade100,
+          baseColor: Colors.grey.shade300,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
