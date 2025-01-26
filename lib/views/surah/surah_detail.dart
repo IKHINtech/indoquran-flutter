@@ -67,173 +67,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                   CustomScrollView(
             controller: _scrollController,
             slivers: <Widget>[
-              SliverAppBar(
-                // show and hide SliverAppBar Title
-                title: _isSliverAppBarExpanded
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          provider.loadingDetail
-                              ? Shimmer.fromColors(
-                                  baseColor: Colors.grey.shade300,
-                                  highlightColor: Colors.grey.shade100,
-                                  child: placeHolder(20, 20),
-                                )
-                              : SurahTempatTurunImage(
-                                  tempatTurun:
-                                      provider.suratDetail!.tempatTurun,
-                                  height: 20,
-                                  width: 20,
-                                ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          provider.loadingDetail
-                              ? Shimmer.fromColors(
-                                  baseColor: Colors.grey.shade300,
-                                  highlightColor: Colors.grey.shade100,
-                                  child: placeHolder(20, 10))
-                              : Text(
-                                  provider.suratDetail!.namaLatin,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          provider.loadingDetail
-                              ? Shimmer.fromColors(
-                                  baseColor: Colors.grey.shade300,
-                                  highlightColor: Colors.grey.shade100,
-                                  child: placeHolder(20, 10))
-                              : Text(
-                                  "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.grey.shade400,
-                                  ),
-                                )
-                        ],
-                      )
-                    : null,
-                pinned: true,
-                snap: false,
-                floating: false,
-                expandedHeight: kExpandedHeight,
-                // show and hide FlexibleSpaceBar title
-                flexibleSpace: _isSliverAppBarExpanded
-                    ? null
-                    : FlexibleSpaceBar(
-                        centerTitle: true,
-                        title: Center(
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 500),
-                            child: isScrolled
-                                ? Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: 80,
-                                      ),
-                                      provider.loadingDetail
-                                          ? Shimmer.fromColors(
-                                              baseColor: Colors.grey.shade300,
-                                              highlightColor:
-                                                  Colors.grey.shade100,
-                                              child: placeHolder(30, 30))
-                                          : SurahTempatTurunImage(
-                                              tempatTurun: provider
-                                                  .suratDetail!.tempatTurun,
-                                              height: 30,
-                                              width: 30,
-                                            ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      provider.loadingDetail
-                                          ? Shimmer.fromColors(
-                                              baseColor: Colors.grey.shade300,
-                                              highlightColor:
-                                                  Colors.grey.shade100,
-                                              child: placeHolder(30, 10))
-                                          : Text(
-                                              provider.suratDetail!.namaLatin,
-                                              textScaler: TextScaler.linear(1),
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      provider.loadingDetail
-                                          ? Shimmer.fromColors(
-                                              baseColor: Colors.grey.shade300,
-                                              highlightColor:
-                                                  Colors.grey.shade100,
-                                              child: placeHolder(30, 10))
-                                          : Text(
-                                              "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.grey.shade400,
-                                              ),
-                                            )
-                                    ],
-                                  )
-                                : provider.loadingDetail
-                                    ? Shimmer.fromColors(
-                                        baseColor: Colors.grey.shade300,
-                                        highlightColor: Colors.grey.shade100,
-                                        child: placeHolder(30, 30),
-                                      )
-                                    : Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SurahTempatTurunImage(
-                                            tempatTurun: provider
-                                                .suratDetail!.tempatTurun,
-                                            height: 50,
-                                            width: 50,
-                                          ),
-                                          Text(
-                                            provider.suratDetail!.namaLatin,
-                                            textScaler: TextScaler.linear(1),
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 4,
-                                          ),
-                                          Text(
-                                            "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.grey.shade400,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                          ),
-                        ),
-                        //background: Image.asset(
-                        //  'assets/images/newBeach.jpg',
-                        //  fit: BoxFit.fill,
-                        //),
-                      ),
-              ),
+              CustomSliverAppBar(
+                  provider: provider,
+                  isSliverAppBarExpanded: _isSliverAppBarExpanded,
+                  kExpandedHeight: kExpandedHeight,
+                  isScrolled: isScrolled),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (_, int index) {
@@ -255,6 +93,204 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomSliverAppBar extends StatelessWidget {
+  const CustomSliverAppBar({
+    super.key,
+    required bool isSliverAppBarExpanded,
+    required this.kExpandedHeight,
+    required this.isScrolled,
+    required this.provider,
+  }) : _isSliverAppBarExpanded = isSliverAppBarExpanded;
+
+  final bool _isSliverAppBarExpanded;
+  final double kExpandedHeight;
+  final bool isScrolled;
+  final SuratProvider provider; // Add this line>
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      // show and hide SliverAppBar Title
+      title: _isSliverAppBarExpanded
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                provider.loadingDetail
+                    ? Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: placeHolder(20, 20),
+                      )
+                    : SurahTempatTurunImage(
+                        tempatTurun: provider.suratDetail!.tempatTurun,
+                        height: 20,
+                        width: 20,
+                      ),
+                SizedBox(
+                  width: 10,
+                ),
+                provider.loadingDetail
+                    ? Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: placeHolder(20, 10),
+                      )
+                    : Text(
+                        provider.suratDetail!.namaLatin,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                SizedBox(
+                  width: 10,
+                ),
+                provider.loadingDetail
+                    ? Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: placeHolder(30, 10),
+                      )
+                    : Text(
+                        "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey.shade400,
+                        ),
+                      )
+              ],
+            )
+          : null,
+      pinned: true,
+      snap: false,
+      floating: false,
+      expandedHeight: kExpandedHeight,
+      // show and hide FlexibleSpaceBar title
+      flexibleSpace: _isSliverAppBarExpanded
+          ? null
+          : FlexibleSpaceBar(
+              centerTitle: true,
+              title: Center(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  child: isScrolled
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 80,
+                            ),
+                            provider.loadingDetail
+                                ? Shimmer.fromColors(
+                                    baseColor: Colors.grey.shade300,
+                                    highlightColor: Colors.grey.shade100,
+                                    child: placeHolder(30, 30),
+                                  )
+                                : SurahTempatTurunImage(
+                                    tempatTurun:
+                                        provider.suratDetail!.tempatTurun,
+                                    height: 30,
+                                    width: 30,
+                                  ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            provider.loadingDetail
+                                ? Shimmer.fromColors(
+                                    baseColor: Colors.grey.shade300,
+                                    highlightColor: Colors.grey.shade100,
+                                    child: placeHolder(40, 10),
+                                  )
+                                : Text(
+                                    provider.suratDetail!.namaLatin,
+                                    textScaler: TextScaler.linear(1),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            provider.loadingDetail
+                                ? Shimmer.fromColors(
+                                    baseColor: Colors.grey.shade300,
+                                    highlightColor: Colors.grey.shade100,
+                                    child: placeHolder(50, 10),
+                                  )
+                                : Text(
+                                    "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                  )
+                          ],
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            provider.loadingDetail
+                                ? Shimmer.fromColors(
+                                    baseColor: Colors.grey.shade300,
+                                    highlightColor: Colors.grey.shade100,
+                                    child: placeHolder(50, 50),
+                                  )
+                                : SurahTempatTurunImage(
+                                    tempatTurun:
+                                        provider.suratDetail!.tempatTurun,
+                                    height: 50,
+                                    width: 50,
+                                  ),
+                            SizedBox(height: 4),
+                            provider.loadingDetail
+                                ? Shimmer.fromColors(
+                                    baseColor: Colors.grey.shade300,
+                                    highlightColor: Colors.grey.shade100,
+                                    child: placeHolder(60, 10),
+                                  )
+                                : Text(
+                                    provider.suratDetail!.namaLatin,
+                                    textScaler: TextScaler.linear(1),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            provider.loadingDetail
+                                ? Shimmer.fromColors(
+                                    baseColor: Colors.grey.shade300,
+                                    highlightColor: Colors.grey.shade100,
+                                    child: placeHolder(100, 8),
+                                  )
+                                : Text(
+                                    "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                  )
+                          ],
+                        ),
+                ),
+              ),
+              //background: Image.asset(
+              //  'assets/images/newBeach.jpg',
+              //  fit: BoxFit.fill,
+              //),
+            ),
     );
   }
 }

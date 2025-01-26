@@ -62,20 +62,13 @@ class SuratProvider extends ChangeNotifier {
   }
 
   Future<void> getDetailSurah(String? nomorSurat) async {
-    print("ini nomot =>$nomorSurat");
     try {
-      if (_suratDetail == null) {
-        String id = "1";
-        if (nomorSurat != null) {
-          id = nomorSurat;
-        }
-        setLoadingDetail(true);
-        Surat result = await AlquranServices.getDetailSurat(id);
-        print("ini result => $result");
-        _suratDetail = result;
-        notifyListeners();
-        setLoadingDetail(false);
-      }
+      setLoadingDetail(true);
+      Surat result = await AlquranServices.getDetailSurat(nomorSurat!);
+      print("ini result => $result");
+      _suratDetail = result;
+      notifyListeners();
+      setLoadingDetail(false);
     } catch (e) {
       print("$e");
       setLoading(false);

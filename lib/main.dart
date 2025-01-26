@@ -36,15 +36,56 @@ final router = GoRouter(
         }),
     GoRoute(
       path: '/quran',
-      name: "surah_list",
+      name: "quran_list",
       builder: (_, __) => SuratScreen(),
       routes: [
         GoRoute(
           path: 'quran/:id',
           name: 'quran_detail',
-          builder: (_, state) => SurahDetailScreen(
-            id: state.pathParameters['id'] ?? '1',
-          ),
+          builder: (_, state) {
+            return SurahDetailScreen(
+              id: state.pathParameters['id'] ?? '1',
+            );
+            //return CustomTransitionPage<void>(
+            //  key: state.pageKey,
+            //  child: SurahDetailScreen(
+            //    id: state.pathParameters['id'] ?? '1',
+            //  ),
+            //  barrierDismissible: true,
+            //  barrierColor: Colors.black38,
+            //  opaque: false,
+            //  transitionDuration: const Duration(milliseconds: 500),
+            //  reverseTransitionDuration: const Duration(milliseconds: 200),
+            //  transitionsBuilder: (BuildContext context,
+            //      Animation<double> animation,
+            //      Animation<double> secondaryAnimation,
+            //      Widget child) {
+            //    return FadeTransition(
+            //      opacity: animation,
+            //      child: child,
+            //    );
+            //  },
+            //);
+            //return CustomTransitionPage<void>(
+            //  key: state.pageKey,
+            //  child: SurahDetailScreen(
+            //    id: state.pathParameters['id'] ?? '1',
+            //  ),
+            //  transitionDuration: const Duration(milliseconds: 150),
+            //  transitionsBuilder: (BuildContext context,
+            //      Animation<double> animation,
+            //      Animation<double> secondaryAnimation,
+            //      Widget child) {
+            //    // Change the opacity of the screen using a Curve based on the the animation's
+            //    // value
+            //    return FadeTransition(
+            //      opacity:
+            //          CurveTween(curve: Curves.easeInOut).animate(animation),
+            //      child: child,
+            //    );
+            //  },
+            //);
+          },
         ),
       ],
     ),

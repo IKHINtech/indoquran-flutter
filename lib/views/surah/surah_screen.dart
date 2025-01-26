@@ -26,49 +26,53 @@ class _SuratScreenState extends State<SuratScreen> {
   Widget build(BuildContext context) {
     return Consumer<SuratProvider>(
       builder: (BuildContext context, SuratProvider provider, Widget? child) =>
-          Container(
-        padding: const EdgeInsets.all(16),
-        child: provider.loading
-            ? loadingSurat()
-            : Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: titleScreen(),
-                  ),
-                  Expanded(
-                    child: AnimatedList.separated(
-                      key: _key,
-                      removedSeparatorBuilder:
-                          (BuildContext context, int index, animation) {
-                        return Divider();
-                      },
-                      initialItemCount: provider.surat.length,
-                      separatorBuilder: (context, index, animation) => Divider(
-                        color: Colors.grey.shade300,
-                      ),
-                      controller: widget.controller,
-                      itemBuilder:
-                          (BuildContext context, int index, animation) {
-                        return SizeTransition(
-                          sizeFactor: animation,
-                          child: SurahCard(
-                            onTap: () {
-                              context.goNamed(
-                                "quran_detail",
-                                pathParameters: {
-                                  "id": provider.surat[index].nomor.toString(),
-                                },
-                              );
-                            },
-                            surat: provider.surat[index],
-                          ),
-                        );
-                      },
+          Material(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: provider.loading
+              ? loadingSurat()
+              : Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: titleScreen(),
                     ),
-                  ),
-                ],
-              ),
+                    Expanded(
+                      child: AnimatedList.separated(
+                        key: _key,
+                        removedSeparatorBuilder:
+                            (BuildContext context, int index, animation) {
+                          return Divider();
+                        },
+                        initialItemCount: provider.surat.length,
+                        separatorBuilder: (context, index, animation) =>
+                            Divider(
+                          color: Colors.grey.shade300,
+                        ),
+                        controller: widget.controller,
+                        itemBuilder:
+                            (BuildContext context, int index, animation) {
+                          return SizeTransition(
+                            sizeFactor: animation,
+                            child: SurahCard(
+                              onTap: () {
+                                context.goNamed(
+                                  "quran_detail",
+                                  pathParameters: {
+                                    "id":
+                                        provider.surat[index].nomor.toString(),
+                                  },
+                                );
+                              },
+                              surat: provider.surat[index],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+        ),
       ),
     );
   }
