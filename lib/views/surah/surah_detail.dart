@@ -131,10 +131,26 @@ class _AyatBuilderState extends State<AyatBuilder> {
                       Row(
                         children: [
                           IconButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                      title: Text(
+                                          "Lihat Ayat ${ayat.nomorAyat}",
+                                          style:
+                                              GoogleFonts.scheherazadeNew())));
+                            },
+                            icon: const Icon(
+                              size: 16,
+                              TablerIcons.library,
+                              color: Colors.green,
+                            ),
+                          ),
+                          IconButton(
                             onPressed: () {},
                             icon: const Icon(
                               size: 16,
-                              TablerIcons.bookmark,
+                              TablerIcons.player_play,
                               color: Colors.orange,
                             ),
                           ),
