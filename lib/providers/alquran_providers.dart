@@ -65,7 +65,6 @@ class SuratProvider extends ChangeNotifier {
     try {
       setLoadingDetail(true);
       Surat result = await AlquranServices.getDetailSurat(nomorSurat!);
-      print("ini result => $result");
       _suratDetail = result;
       notifyListeners();
       setLoadingDetail(false);

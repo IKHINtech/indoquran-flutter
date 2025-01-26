@@ -4,7 +4,7 @@ List<Ayat> ayatListFromJson(List<dynamic> data) {
 
 class Ayat {
   //final int id;
-  final int nomorSurat;
+  final int? nomorSurat;
   final int nomorAyat;
   final String teksArab;
   final String teksLatin;
@@ -13,7 +13,7 @@ class Ayat {
 
   Ayat({
     //required this.id,
-    required this.nomorSurat,
+    this.nomorSurat,
     required this.nomorAyat,
     required this.teksArab,
     required this.teksLatin,
@@ -23,7 +23,7 @@ class Ayat {
 
   factory Ayat.fromJson(Map<String, dynamic> json) => Ayat(
         //id: json[AyatFields.id],
-        nomorSurat: json[AyatFields.nomorSurat],
+        //nomorSurat: json[AyatFields.nomorSurat],
         nomorAyat: json[AyatFields.nomorAyat],
         teksArab: json[AyatFields.teksArab],
         teksLatin: json[AyatFields.teksLatin],

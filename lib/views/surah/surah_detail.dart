@@ -2,7 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:indoquran/models/ayat_model.dart';
 import 'package:indoquran/providers/alquran_providers.dart';
+import 'package:indoquran/widgets/loading_ayat.dart';
+import 'package:indoquran/widgets/loading_surat.dart';
 import 'package:indoquran/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -72,26 +76,52 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                   isSliverAppBarExpanded: _isSliverAppBarExpanded,
                   kExpandedHeight: kExpandedHeight,
                   isScrolled: isScrolled),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (_, int index) {
-                    return ListTile(
-                      leading: Container(
-                        margin: const EdgeInsets.all(8.0),
-                        color: Colors.primaries[
-                            Random().nextInt(Colors.primaries.length)],
-                        padding: const EdgeInsets.all(8),
-                        width: 100,
-                      ),
-                      title: Text('Place ${index + 1}', textScaleFactor: 1.5),
-                    );
-                  },
-                  childCount: 20,
-                ),
-              ),
+              AyatBuilder(provider: provider),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class AyatBuilder extends StatefulWidget {
+  final SuratProvider provider;
+  const AyatBuilder({
+    super.key,
+    required this.provider,
+  });
+
+  @override
+  State<AyatBuilder> createState() => _AyatBuilderState();
+}
+
+class _AyatBuilderState extends State<AyatBuilder> {
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          if (!widget.provider.loadingDetail) {
+            return AyatLoading();
+          } else {
+            Ayat ayat = widget.provider.suratDetail!.ayat![index];
+            return ListTile(
+              title: Text(
+                '${ayat.teksLatin}',
+                style: GoogleFonts.quicksand(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            );
+          }
+        },
+        childCount: widget.provider.loadingDetail
+            ? 10
+            : widget.provider.suratDetail != null
+                ? widget.provider.suratDetail!.jumlahAyat
+                : 0,
       ),
     );
   }
