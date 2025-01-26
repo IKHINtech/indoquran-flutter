@@ -1,12 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:indoquran/const/themes.dart';
 import 'package:indoquran/models/ayat_model.dart';
 import 'package:indoquran/providers/alquran_providers.dart';
 import 'package:indoquran/widgets/loading_ayat.dart';
 import 'package:indoquran/widgets/loading_surat.dart';
+import 'package:indoquran/widgets/nomor.dart';
 import 'package:indoquran/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -102,17 +105,98 @@ class _AyatBuilderState extends State<AyatBuilder> {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          if (!widget.provider.loadingDetail) {
+          if (widget.provider.loadingDetail) {
             return AyatLoading();
           } else {
             Ayat ayat = widget.provider.suratDetail!.ayat![index];
-            return ListTile(
-              title: Text(
-                '${ayat.teksLatin}',
-                style: GoogleFonts.quicksand(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        constraints: const BoxConstraints(
+                          minWidth: 40,
+                          maxWidth: 40,
+                          minHeight: 40,
+                          maxHeight: 40,
+                        ),
+                        child: NomorWidget(
+                          nomor: ayat.nomorAyat,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              size: 16,
+                              TablerIcons.bookmark,
+                              color: Colors.orange,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              size: 16,
+                              TablerIcons.dots,
+                              color: cPrimary,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    ayat.teksArab,
+                    textAlign: TextAlign.end,
+                    style: GoogleFonts.scheherazadeNew(
+                      fontSize: 20,
+                      height: 2.5,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              ayat.teksLatin,
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w800,
+                                height: 1.5,
+                                color: cPrimary,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              ayat.teksIndonesia,
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w800,
+                                height: 1.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Divider(),
+                ],
               ),
             );
           }
@@ -272,7 +356,7 @@ class CustomSliverAppBar extends StatelessWidget {
                                 ? Shimmer.fromColors(
                                     baseColor: Colors.grey.shade300,
                                     highlightColor: Colors.grey.shade100,
-                                    child: placeHolder(50, 50),
+                                    child: CircleAvatar(),
                                   )
                                 : SurahTempatTurunImage(
                                     tempatTurun:

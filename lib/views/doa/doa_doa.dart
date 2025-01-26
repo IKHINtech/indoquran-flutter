@@ -88,13 +88,15 @@ class DoaDoaCard extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 14),
-        Text(doa.arab,
-            textAlign: TextAlign.end,
-            style: GoogleFonts.scheherazadeNew(
-              fontSize: 20,
-              height: 2.5,
-              fontWeight: FontWeight.w600,
-            )),
+        Text(
+          doa.arab,
+          textAlign: TextAlign.end,
+          style: GoogleFonts.scheherazadeNew(
+            fontSize: 20,
+            height: 2.5,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         const SizedBox(height: 14),
         Text(
           doa.indo,
