@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:indoquran/const/themes.dart';
+import 'package:indoquran/providers/doa_providers.dart';
 import 'package:indoquran/views/doa/doa_doa.dart';
 import 'package:indoquran/views/doa/doa_harian.dart';
 import 'package:indoquran/views/doa/doa_tahlil.dart';
+import 'package:provider/provider.dart';
 
 class DoaScreen extends StatefulWidget {
   final ScrollController? controller;
@@ -21,6 +23,11 @@ class _DoaScreenState extends State<DoaScreen>
   void initState() {
     super.initState();
     tabController = TabController(length: 3, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      int activeTab =
+          Provider.of<DoaProvider>(context, listen: false).activeTab;
+      tabController.animateTo(activeTab);
+    });
   }
 
   @override
@@ -82,6 +89,7 @@ class _DoaScreenState extends State<DoaScreen>
           ),
           Expanded(
             child: DefaultTabController(
+              initialIndex: 0,
               length: 3,
               child: Column(
                 children: <Widget>[
@@ -93,7 +101,11 @@ class _DoaScreenState extends State<DoaScreen>
                       borderRadius: BorderRadius.circular(8),
                     ),
                     constraints: const BoxConstraints(maxHeight: 38.0),
-                    child: const TabBar(
+                    child: TabBar(
+                      onTap: (value) {
+                        Provider.of<DoaProvider>(context, listen: false)
+                            .setActiveTab(value);
+                      },
                       dividerColor: Colors.transparent,
                       indicatorColor: cPrimary,
                       indicator: BoxDecoration(

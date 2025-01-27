@@ -15,6 +15,13 @@ class DoaProvider extends ChangeNotifier {
   List<DoaDoa> get doaDoa => _doaDoa;
   List<DoaTahlil> get doaTahlil => _doaTahlil;
 
+  int _activeTab = 0;
+  int get activeTab => _activeTab;
+  void setActiveTab(int index) {
+    _activeTab = index;
+    notifyListeners();
+  }
+
   bool _loadingDoaHarian = false;
   bool get loadingDoaHarian => _loadingDoaHarian;
   void setloadingDoaHarian(bool value) {
