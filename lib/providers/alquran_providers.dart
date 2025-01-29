@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:indoquran/models/ayat_model.dart';
 import 'package:indoquran/models/surat_model.dart';
 import 'package:indoquran/repository/surah/surah_repository.dart';
 import 'package:indoquran/services/alquran_services.dart';
@@ -12,6 +13,15 @@ class SuratProvider extends ChangeNotifier {
   bool _loadingDetail = false;
   bool get loading => _loading;
   bool get loadingDetail => _loadingDetail;
+
+  Ayat? _selectedAyat;
+
+  Ayat? selectedAyat() => _selectedAyat;
+
+  void setSelectedAyat(Ayat? ayat) {
+    _selectedAyat = ayat;
+    notifyListeners();
+  }
 
   void setLoading(bool value) {
     _loading = value;

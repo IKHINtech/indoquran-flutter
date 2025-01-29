@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
-import 'package:go_router/go_router.dart';
+//import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:indoquran/const/themes.dart';
 import 'package:indoquran/views/doa/doa_screen.dart';
@@ -29,14 +29,12 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     tabController = TabController(length: 5, vsync: this);
     tabController.animateTo(currentScreen);
-    tabController.animation!.addListener(
-      () {
-        final value = tabController.animation!.value.round();
-        if (value != currentScreen && mounted) {
-          changeScreen(value);
-        }
-      },
-    );
+    tabController.animation!.addListener(() {
+      final value = tabController.animation!.value.round();
+      if (value != currentScreen && mounted) {
+        changeScreen(value);
+      }
+    });
     super.initState();
   }
 

@@ -21,13 +21,23 @@ class _DoaScreenState extends State<DoaScreen>
 
   @override
   void initState() {
-    super.initState();
     tabController = TabController(length: 3, vsync: this);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      int activeTab =
-          Provider.of<DoaProvider>(context, listen: false).activeTab;
-      tabController.animateTo(activeTab);
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        int activeTab =
+            Provider.of<DoaProvider>(context, listen: false).activeTab;
+
+        tabController.index = activeTab;
+        print(tabController.index);
+        tabController.addListener(
+          () {
+            Provider.of<DoaProvider>(context, listen: false)
+                .setActiveTab(tabController.index);
+          },
+        );
+      },
+    );
+    super.initState();
   }
 
   @override
@@ -102,10 +112,11 @@ class _DoaScreenState extends State<DoaScreen>
                     ),
                     constraints: const BoxConstraints(maxHeight: 38.0),
                     child: TabBar(
-                      onTap: (value) {
-                        Provider.of<DoaProvider>(context, listen: false)
-                            .setActiveTab(value);
-                      },
+                      //onTap: (value) {
+                      //  var provider =
+                      //      Provider.of<DoaProvider>(context, listen: false);
+                      //  provider.setActiveTab(value);
+                      //},
                       dividerColor: Colors.transparent,
                       indicatorColor: cPrimary,
                       indicator: BoxDecoration(

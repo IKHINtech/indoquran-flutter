@@ -28,7 +28,6 @@ class AlquranServices {
       Response response = await api.get(
         '/surat/$nomorSurat',
       );
-      print("ini result =>${response.data}");
       final result = suratFromJson(response.data);
       return result;
     } catch (e) {
