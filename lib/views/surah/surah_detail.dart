@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -97,22 +94,32 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
           ),
         ),
         floatingActionButton: ValueListenableBuilder(
-            valueListenable: _isFabVisible,
-            builder: (context, isVisible, _) {
-              return AnimatedOpacity(
-                opacity: isVisible ? 1.0 : 0.0,
-                duration: Duration(milliseconds: 300),
-                child: isVisible
-                    ? FloatingActionButton(
+          valueListenable: _isFabVisible,
+          builder: (context, isVisible, _) {
+            return AnimatedOpacity(
+              opacity: isVisible ? 1.0 : 0.0,
+              duration: Duration(milliseconds: 300),
+              child: isVisible
+                  ? Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: IconButton(
                         onPressed:
                             _scrollToTop, // Scroll ke atas saat FAB ditekan
-                        child: Icon(
+                        icon: Icon(
                           Icons.arrow_upward,
+                          color: Theme.of(context).colorScheme.onPrimary,
                         ),
-                      )
-                    : null,
-              );
-            }),
+                      ),
+                    )
+                  : null,
+            );
+          },
+        ),
       ),
     );
   }
