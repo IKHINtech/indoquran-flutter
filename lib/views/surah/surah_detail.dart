@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,9 +25,10 @@ class SurahDetailScreen extends StatefulWidget {
 class _SurahDetailScreenState extends State<SurahDetailScreen> {
   late ScrollController _scrollController;
   final TextEditingController ayatController = TextEditingController();
-  //Color _textColor = Colors.white;
-  bool isScrolled = false;
+  ValueNotifier<bool> isScrolled = ValueNotifier<bool>(false);
   static const kExpandedHeight = 200.0;
+  ValueNotifier<bool> _isFabVisible = ValueNotifier<bool>(false);
+
   @override
   void initState() {
     super.initState();
@@ -36,28 +38,37 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
     _scrollController = ScrollController()
       ..addListener(() {
         _scrollListener();
-        setState(() {
-          //_textColor = _isSliverAppBarExpanded ? Colors.white : Colors.black;
-        });
+        setState(() {});
       });
   }
 
   void _scrollListener() {
     // Ganti nilai threshold sesuai kebutuhan (misalnya, 100.0)
-    if (_scrollController.offset > 90.0 && !isScrolled) {
-      setState(() {
-        isScrolled = true;
-      });
-    } else if (_scrollController.offset <= 90.0 && isScrolled) {
-      setState(() {
-        isScrolled = false;
-      });
+    if (_scrollController.offset > 90.0 && !isScrolled.value) {
+      isScrolled.value = true;
+    } else if (_scrollController.offset <= 90.0 && isScrolled.value) {
+      isScrolled.value = false;
+    }
+
+// Mengontrol visibilitas FAB berdasarkan posisi scroll
+    if (_scrollController.offset > 0.0 && !_isFabVisible.value) {
+      _isFabVisible.value = true; // Tampilkan FAB jika sudah tidak di atas
+    } else if (_scrollController.offset <= 0.0 && _isFabVisible.value) {
+      _isFabVisible.value = false; // Sembunyikan FAB jika di posisi atas
     }
   }
 
   bool get _isSliverAppBarExpanded {
     return _scrollController.hasClients &&
         _scrollController.offset > kExpandedHeight - kToolbarHeight;
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(
+      0.0, // Posisi paling atas
+      duration: Duration(milliseconds: 500), // Durasi animasi
+      curve: Curves.easeInOut, // Kurva animasi
+    );
   }
 
   @override
@@ -75,15 +86,33 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
             controller: _scrollController,
             slivers: <Widget>[
               CustomSliverAppBar(
-                  ayatController: ayatController,
-                  id: int.parse(widget.id!),
-                  isSliverAppBarExpanded: _isSliverAppBarExpanded,
-                  kExpandedHeight: kExpandedHeight,
-                  isScrolled: isScrolled),
+                ayatController: ayatController,
+                id: int.parse(widget.id!),
+                isSliverAppBarExpanded: _isSliverAppBarExpanded,
+                kExpandedHeight: kExpandedHeight,
+                isScrolled: isScrolled,
+              ),
               AyatBuilder(provider: provider),
             ],
           ),
         ),
+        floatingActionButton: ValueListenableBuilder(
+            valueListenable: _isFabVisible,
+            builder: (context, isVisible, _) {
+              return AnimatedOpacity(
+                opacity: isVisible ? 1.0 : 0.0,
+                duration: Duration(milliseconds: 300),
+                child: isVisible
+                    ? FloatingActionButton(
+                        onPressed:
+                            _scrollToTop, // Scroll ke atas saat FAB ditekan
+                        child: Icon(
+                          Icons.arrow_upward,
+                        ),
+                      )
+                    : null,
+              );
+            }),
       ),
     );
   }
@@ -242,7 +271,7 @@ class CustomSliverAppBar extends StatelessWidget {
   final int id;
   final bool _isSliverAppBarExpanded;
   final double kExpandedHeight;
-  final bool isScrolled;
+  final ValueNotifier<bool> isScrolled;
   final TextEditingController ayatController;
 
   @override
@@ -312,210 +341,224 @@ class CustomSliverAppBar extends StatelessWidget {
             : FlexibleSpaceBar(
                 centerTitle: true,
                 title: Center(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    child: isScrolled
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 80,
-                              ),
-                              provider.loadingDetail
-                                  ? Shimmer.fromColors(
-                                      baseColor: Colors.grey.shade300,
-                                      highlightColor: Colors.grey.shade100,
-                                      child: placeHolder(30, 30),
-                                    )
-                                  : SurahTempatTurunImage(
-                                      tempatTurun:
-                                          provider.suratDetail!.tempatTurun,
-                                      height: 30,
-                                      width: 30,
+                  child: ValueListenableBuilder(
+                      valueListenable: isScrolled,
+                      builder: (context, isScrolled, _) {
+                        return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 500),
+                          child: isScrolled
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 80,
                                     ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              provider.loadingDetail
-                                  ? Shimmer.fromColors(
-                                      baseColor: Colors.grey.shade300,
-                                      highlightColor: Colors.grey.shade100,
-                                      child: placeHolder(40, 10),
-                                    )
-                                  : Text(
-                                      provider.suratDetail!.namaLatin,
-                                      textScaler: TextScaler.linear(1),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
+                                    provider.loadingDetail
+                                        ? Shimmer.fromColors(
+                                            baseColor: Colors.grey.shade300,
+                                            highlightColor:
+                                                Colors.grey.shade100,
+                                            child: placeHolder(30, 30),
+                                          )
+                                        : SurahTempatTurunImage(
+                                            tempatTurun: provider
+                                                .suratDetail!.tempatTurun,
+                                            height: 30,
+                                            width: 30,
+                                          ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    provider.loadingDetail
+                                        ? Shimmer.fromColors(
+                                            baseColor: Colors.grey.shade300,
+                                            highlightColor:
+                                                Colors.grey.shade100,
+                                            child: placeHolder(40, 10),
+                                          )
+                                        : Text(
+                                            provider.suratDetail!.namaLatin,
+                                            textScaler: TextScaler.linear(1),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    provider.loadingDetail
+                                        ? Shimmer.fromColors(
+                                            baseColor: Colors.grey.shade300,
+                                            highlightColor:
+                                                Colors.grey.shade100,
+                                            child: placeHolder(50, 10),
+                                          )
+                                        : Text(
+                                            "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.grey.shade400,
+                                            ),
+                                          )
+                                  ],
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    provider.loadingDetail
+                                        ? Shimmer.fromColors(
+                                            baseColor: Colors.grey.shade300,
+                                            highlightColor:
+                                                Colors.grey.shade100,
+                                            child: CircleAvatar(),
+                                          )
+                                        : SurahTempatTurunImage(
+                                            tempatTurun: provider
+                                                .suratDetail!.tempatTurun,
+                                            height: 50,
+                                            width: 50,
+                                          ),
+                                    SizedBox(height: 4),
+                                    provider.loadingDetail
+                                        ? Shimmer.fromColors(
+                                            baseColor: Colors.grey.shade300,
+                                            highlightColor:
+                                                Colors.grey.shade100,
+                                            child: placeHolder(60, 10),
+                                          )
+                                        : Text(
+                                            provider.suratDetail!.namaLatin,
+                                            textScaler: TextScaler.linear(1),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    provider.loadingDetail
+                                        ? Shimmer.fromColors(
+                                            baseColor: Colors.grey.shade300,
+                                            highlightColor:
+                                                Colors.grey.shade100,
+                                            child: placeHolder(100, 8),
+                                          )
+                                        : Text(
+                                            "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.grey.shade400,
+                                            ),
+                                          ),
+                                    if (id != 1 && id != 9) ...[
+                                      SizedBox(
+                                        height: 10,
                                       ),
-                                    ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              provider.loadingDetail
-                                  ? Shimmer.fromColors(
-                                      baseColor: Colors.grey.shade300,
-                                      highlightColor: Colors.grey.shade100,
-                                      child: placeHolder(50, 10),
-                                    )
-                                  : Text(
-                                      "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.grey.shade400,
-                                      ),
-                                    )
-                            ],
-                          )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              provider.loadingDetail
-                                  ? Shimmer.fromColors(
-                                      baseColor: Colors.grey.shade300,
-                                      highlightColor: Colors.grey.shade100,
-                                      child: CircleAvatar(),
-                                    )
-                                  : SurahTempatTurunImage(
-                                      tempatTurun:
-                                          provider.suratDetail!.tempatTurun,
-                                      height: 50,
-                                      width: 50,
-                                    ),
-                              SizedBox(height: 4),
-                              provider.loadingDetail
-                                  ? Shimmer.fromColors(
-                                      baseColor: Colors.grey.shade300,
-                                      highlightColor: Colors.grey.shade100,
-                                      child: placeHolder(60, 10),
-                                    )
-                                  : Text(
-                                      provider.suratDetail!.namaLatin,
-                                      textScaler: TextScaler.linear(1),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                              SizedBox(
-                                height: 4,
-                              ),
-                              provider.loadingDetail
-                                  ? Shimmer.fromColors(
-                                      baseColor: Colors.grey.shade300,
-                                      highlightColor: Colors.grey.shade100,
-                                      child: placeHolder(100, 8),
-                                    )
-                                  : Text(
-                                      "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.grey.shade400,
-                                      ),
-                                    ),
-                              if (id != 1 && id != 9) ...[
-                                SizedBox(
-                                  height: 10,
+                                      provider.loadingDetail
+                                          ? Shimmer.fromColors(
+                                              baseColor: Colors.grey.shade300,
+                                              highlightColor:
+                                                  Colors.grey.shade100,
+                                              child: placeHolder(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      3,
+                                                  14),
+                                            )
+                                          : Image.asset(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3,
+                                              "assets/images/bismillah.png",
+                                            ),
+                                    ],
+                                    //Row(
+                                    //  children: [
+                                    //    Expanded(
+                                    //      child: DropdownMenu<Ayat>(
+                                    //        trailingIcon: Icon(Icons.api),
+                                    //        controller: ayatController,
+                                    //        requestFocusOnTap: false,
+                                    //        onSelected: (Ayat? ayat) {
+                                    //          provider.setSelectedAyat(ayat);
+                                    //        },
+                                    //        inputDecorationTheme:
+                                    //            InputDecorationTheme(
+                                    //          isDense: true,
+                                    //          //contentPadding:
+                                    //          //    const EdgeInsets.symmetric(
+                                    //          //        horizontal: 2),
+                                    //          //constraints: BoxConstraints.tight(
+                                    //          //  const Size.fromHeight(30),
+                                    //          //),
+                                    //          border: OutlineInputBorder(
+                                    //            borderRadius:
+                                    //                BorderRadius.circular(8),
+                                    //          ),
+                                    //        ),
+                                    //        dropdownMenuEntries: provider
+                                    //            .suratDetail!.ayat!
+                                    //            .map<DropdownMenuEntry<Ayat>>(
+                                    //                (Ayat ayat) {
+                                    //          return DropdownMenuEntry<Ayat>(
+                                    //            value: ayat,
+                                    //            label: "Buka Ayat ${ayat.nomorAyat}",
+                                    //            //enabled: color.label != 'Grey',
+                                    //            //style: MenuItemButton.styleFrom(
+                                    //            //  foregroundColor: color.color,
+                                    //            //),
+                                    //          );
+                                    //        }).toList(),
+                                    //      ),
+                                    //    ),
+                                    //    Expanded(
+                                    //      child: DropdownMenu<Ayat>(
+                                    //        trailingIcon: Icon(Icons.api),
+                                    //        controller: ayatController,
+                                    //        requestFocusOnTap: false,
+                                    //        onSelected: (Ayat? ayat) {
+                                    //          provider.setSelectedAyat(ayat);
+                                    //        },
+                                    //        //inputDecorationTheme: InputDecorationTheme(
+                                    //        //  isDense: true,
+                                    //        //  contentPadding:
+                                    //        //      const EdgeInsets.symmetric(
+                                    //        //          horizontal: 2),
+                                    //        //  constraints: BoxConstraints.tight(
+                                    //        //    const Size.fromHeight(30),
+                                    //        //  ),
+                                    //        //  border: OutlineInputBorder(
+                                    //        //    borderRadius: BorderRadius.circular(8),
+                                    //        //  ),
+                                    //        //),
+                                    //        dropdownMenuEntries: provider
+                                    //            .suratDetail!.ayat!
+                                    //            .map<DropdownMenuEntry<Ayat>>(
+                                    //                (Ayat ayat) {
+                                    //          return DropdownMenuEntry<Ayat>(
+                                    //            value: ayat,
+                                    //            label: "Buka Ayat ${ayat.nomorAyat}",
+                                    //            //enabled: color.label != 'Grey',
+                                    //            //style: MenuItemButton.styleFrom(
+                                    //            //  foregroundColor: color.color,
+                                    //            //),
+                                    //          );
+                                    //        }).toList(),
+                                    //      ),
+                                    //    ),
+                                    //  ],
+                                    //),
+                                  ],
                                 ),
-                                provider.loadingDetail
-                                    ? Shimmer.fromColors(
-                                        baseColor: Colors.grey.shade300,
-                                        highlightColor: Colors.grey.shade100,
-                                        child: placeHolder(
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                            14),
-                                      )
-                                    : Image.asset(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        "assets/images/bismillah.png",
-                                      ),
-                              ],
-                              //Row(
-                              //  children: [
-                              //    Expanded(
-                              //      child: DropdownMenu<Ayat>(
-                              //        trailingIcon: Icon(Icons.api),
-                              //        controller: ayatController,
-                              //        requestFocusOnTap: false,
-                              //        onSelected: (Ayat? ayat) {
-                              //          provider.setSelectedAyat(ayat);
-                              //        },
-                              //        inputDecorationTheme:
-                              //            InputDecorationTheme(
-                              //          isDense: true,
-                              //          //contentPadding:
-                              //          //    const EdgeInsets.symmetric(
-                              //          //        horizontal: 2),
-                              //          //constraints: BoxConstraints.tight(
-                              //          //  const Size.fromHeight(30),
-                              //          //),
-                              //          border: OutlineInputBorder(
-                              //            borderRadius:
-                              //                BorderRadius.circular(8),
-                              //          ),
-                              //        ),
-                              //        dropdownMenuEntries: provider
-                              //            .suratDetail!.ayat!
-                              //            .map<DropdownMenuEntry<Ayat>>(
-                              //                (Ayat ayat) {
-                              //          return DropdownMenuEntry<Ayat>(
-                              //            value: ayat,
-                              //            label: "Buka Ayat ${ayat.nomorAyat}",
-                              //            //enabled: color.label != 'Grey',
-                              //            //style: MenuItemButton.styleFrom(
-                              //            //  foregroundColor: color.color,
-                              //            //),
-                              //          );
-                              //        }).toList(),
-                              //      ),
-                              //    ),
-                              //    Expanded(
-                              //      child: DropdownMenu<Ayat>(
-                              //        trailingIcon: Icon(Icons.api),
-                              //        controller: ayatController,
-                              //        requestFocusOnTap: false,
-                              //        onSelected: (Ayat? ayat) {
-                              //          provider.setSelectedAyat(ayat);
-                              //        },
-                              //        //inputDecorationTheme: InputDecorationTheme(
-                              //        //  isDense: true,
-                              //        //  contentPadding:
-                              //        //      const EdgeInsets.symmetric(
-                              //        //          horizontal: 2),
-                              //        //  constraints: BoxConstraints.tight(
-                              //        //    const Size.fromHeight(30),
-                              //        //  ),
-                              //        //  border: OutlineInputBorder(
-                              //        //    borderRadius: BorderRadius.circular(8),
-                              //        //  ),
-                              //        //),
-                              //        dropdownMenuEntries: provider
-                              //            .suratDetail!.ayat!
-                              //            .map<DropdownMenuEntry<Ayat>>(
-                              //                (Ayat ayat) {
-                              //          return DropdownMenuEntry<Ayat>(
-                              //            value: ayat,
-                              //            label: "Buka Ayat ${ayat.nomorAyat}",
-                              //            //enabled: color.label != 'Grey',
-                              //            //style: MenuItemButton.styleFrom(
-                              //            //  foregroundColor: color.color,
-                              //            //),
-                              //          );
-                              //        }).toList(),
-                              //      ),
-                              //    ),
-                              //  ],
-                              //),
-                            ],
-                          ),
-                  ),
+                        );
+                      }),
                 ),
                 //background: Image.asset(
                 //  'assets/images/newBeach.jpg',
