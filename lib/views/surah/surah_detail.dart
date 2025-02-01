@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +11,14 @@ import 'package:indoquran/widgets/nomor.dart';
 import 'package:indoquran/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+
+List<Map<String, String>> list = [
+  {"01": "Abdullah Al-Juhany"},
+  {"02": "Abdul Muhsin Al Qasim"},
+  {"03": "Abdurrahman as Sudais"},
+  {"04": "Ibrahim Al Dossari"},
+  {"05": "Misyari Rasyid Al Afasi"}
+];
 
 class SurahDetailScreen extends StatefulWidget {
   final String? id;
@@ -486,82 +495,28 @@ class CustomSliverAppBar extends StatelessWidget {
                                               "assets/images/bismillah.png",
                                             ),
                                     ],
-                                    //Row(
-                                    //  children: [
-                                    //    Expanded(
-                                    //      child: DropdownMenu<Ayat>(
-                                    //        trailingIcon: Icon(Icons.api),
-                                    //        controller: ayatController,
-                                    //        requestFocusOnTap: false,
-                                    //        onSelected: (Ayat? ayat) {
-                                    //          provider.setSelectedAyat(ayat);
-                                    //        },
-                                    //        inputDecorationTheme:
-                                    //            InputDecorationTheme(
-                                    //          isDense: true,
-                                    //          //contentPadding:
-                                    //          //    const EdgeInsets.symmetric(
-                                    //          //        horizontal: 2),
-                                    //          //constraints: BoxConstraints.tight(
-                                    //          //  const Size.fromHeight(30),
-                                    //          //),
-                                    //          border: OutlineInputBorder(
-                                    //            borderRadius:
-                                    //                BorderRadius.circular(8),
-                                    //          ),
-                                    //        ),
-                                    //        dropdownMenuEntries: provider
-                                    //            .suratDetail!.ayat!
-                                    //            .map<DropdownMenuEntry<Ayat>>(
-                                    //                (Ayat ayat) {
-                                    //          return DropdownMenuEntry<Ayat>(
-                                    //            value: ayat,
-                                    //            label: "Buka Ayat ${ayat.nomorAyat}",
-                                    //            //enabled: color.label != 'Grey',
-                                    //            //style: MenuItemButton.styleFrom(
-                                    //            //  foregroundColor: color.color,
-                                    //            //),
-                                    //          );
-                                    //        }).toList(),
-                                    //      ),
-                                    //    ),
-                                    //    Expanded(
-                                    //      child: DropdownMenu<Ayat>(
-                                    //        trailingIcon: Icon(Icons.api),
-                                    //        controller: ayatController,
-                                    //        requestFocusOnTap: false,
-                                    //        onSelected: (Ayat? ayat) {
-                                    //          provider.setSelectedAyat(ayat);
-                                    //        },
-                                    //        //inputDecorationTheme: InputDecorationTheme(
-                                    //        //  isDense: true,
-                                    //        //  contentPadding:
-                                    //        //      const EdgeInsets.symmetric(
-                                    //        //          horizontal: 2),
-                                    //        //  constraints: BoxConstraints.tight(
-                                    //        //    const Size.fromHeight(30),
-                                    //        //  ),
-                                    //        //  border: OutlineInputBorder(
-                                    //        //    borderRadius: BorderRadius.circular(8),
-                                    //        //  ),
-                                    //        //),
-                                    //        dropdownMenuEntries: provider
-                                    //            .suratDetail!.ayat!
-                                    //            .map<DropdownMenuEntry<Ayat>>(
-                                    //                (Ayat ayat) {
-                                    //          return DropdownMenuEntry<Ayat>(
-                                    //            value: ayat,
-                                    //            label: "Buka Ayat ${ayat.nomorAyat}",
-                                    //            //enabled: color.label != 'Grey',
-                                    //            //style: MenuItemButton.styleFrom(
-                                    //            //  foregroundColor: color.color,
-                                    //            //),
-                                    //          );
-                                    //        }).toList(),
-                                    //      ),
-                                    //    ),
-                                    //  ],
-                                    //),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Wrap(
+                                          spacing:
+                                              3, // Mengatur jarak antar Chip
+                                          children: list.map((e) {
+                                            var entry = e.entries.first;
+                                            return Container(
+                                              child: Chip(
+                                                label: Text(
+                                                  entry.value,
+                                                  style: TextStyle(fontSize: 5),
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    )
                                   ],
                                 ),
                         );
