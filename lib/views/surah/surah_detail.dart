@@ -1,4 +1,3 @@
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:go_router/go_router.dart';
@@ -32,8 +31,9 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   late ScrollController _scrollController;
   final TextEditingController ayatController = TextEditingController();
   ValueNotifier<bool> isScrolled = ValueNotifier<bool>(false);
-  static const kExpandedHeight = 200.0;
+  static const kExpandedHeight = 250.0;
   ValueNotifier<bool> _isFabVisible = ValueNotifier<bool>(false);
+  ValueNotifier<String> _selectedMurotal = ValueNotifier<String>("01");
 
   @override
   void initState() {
@@ -50,9 +50,9 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
 
   void _scrollListener() {
     // Ganti nilai threshold sesuai kebutuhan (misalnya, 100.0)
-    if (_scrollController.offset > 90.0 && !isScrolled.value) {
+    if (_scrollController.offset > 100.0 && !isScrolled.value) {
       isScrolled.value = true;
-    } else if (_scrollController.offset <= 90.0 && isScrolled.value) {
+    } else if (_scrollController.offset <= 100.0 && isScrolled.value) {
       isScrolled.value = false;
     }
 
@@ -92,6 +92,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
             controller: _scrollController,
             slivers: <Widget>[
               CustomSliverAppBar(
+                selectedMurotal: _selectedMurotal,
                 ayatController: ayatController,
                 id: int.parse(widget.id!),
                 isSliverAppBarExpanded: _isSliverAppBarExpanded,
@@ -283,81 +284,84 @@ class CustomSliverAppBar extends StatelessWidget {
     required this.isScrolled,
     required this.id,
     required this.ayatController,
+    required this.selectedMurotal,
   }) : _isSliverAppBarExpanded = isSliverAppBarExpanded;
   final int id;
   final bool _isSliverAppBarExpanded;
   final double kExpandedHeight;
   final ValueNotifier<bool> isScrolled;
+  final ValueNotifier<String> selectedMurotal;
   final TextEditingController ayatController;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SuratProvider>(builder: (context, provider, _) {
-      return SliverAppBar(
-        // show and hide SliverAppBar Title
-        title: _isSliverAppBarExpanded
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  provider.loadingDetail
-                      ? Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child: placeHolder(20, 20),
-                        )
-                      : SurahTempatTurunImage(
-                          tempatTurun: provider.suratDetail!.tempatTurun,
-                          height: 20,
-                          width: 20,
-                        ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  provider.loadingDetail
-                      ? Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child: placeHolder(20, 10),
-                        )
-                      : Text(
-                          provider.suratDetail!.namaLatin,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
+    return Consumer<SuratProvider>(
+      builder: (context, provider, _) {
+        return SliverAppBar(
+          // show and hide SliverAppBar Title
+          title: _isSliverAppBarExpanded
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    provider.loadingDetail
+                        ? Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: placeHolder(20, 20),
+                          )
+                        : SurahTempatTurunImage(
+                            tempatTurun: provider.suratDetail!.tempatTurun,
+                            height: 20,
+                            width: 20,
                           ),
-                        ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  provider.loadingDetail
-                      ? Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child: placeHolder(30, 10),
-                        )
-                      : Text(
-                          "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade400,
+                    SizedBox(
+                      width: 10,
+                    ),
+                    provider.loadingDetail
+                        ? Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: placeHolder(20, 10),
+                          )
+                        : Text(
+                            provider.suratDetail!.namaLatin,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        )
-                ],
-              )
-            : null,
-        pinned: true,
-        snap: false,
-        floating: false,
-        expandedHeight: kExpandedHeight,
-        // show and hide FlexibleSpaceBar title
-        flexibleSpace: _isSliverAppBarExpanded
-            ? null
-            : FlexibleSpaceBar(
-                centerTitle: true,
-                title: Center(
-                  child: ValueListenableBuilder(
+                    SizedBox(
+                      width: 10,
+                    ),
+                    provider.loadingDetail
+                        ? Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: placeHolder(30, 10),
+                          )
+                        : Text(
+                            "${provider.suratDetail!.jumlahAyat} Ayat, ${provider.suratDetail!.arti}",
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade400,
+                            ),
+                          )
+                  ],
+                )
+              : null,
+          pinned: true,
+          snap: false,
+          floating: false,
+          expandedHeight: kExpandedHeight,
+          // show and hide FlexibleSpaceBar title
+          flexibleSpace: _isSliverAppBarExpanded
+              ? null
+              : FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Center(
+                    child: ValueListenableBuilder(
                       valueListenable: isScrolled,
                       builder: (context, isScrolled, _) {
                         return AnimatedSwitcher(
@@ -471,65 +475,138 @@ class CustomSliverAppBar extends StatelessWidget {
                                               color: Colors.grey.shade400,
                                             ),
                                           ),
-                                    if (id != 1 && id != 9) ...[
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      provider.loadingDetail
-                                          ? Shimmer.fromColors(
-                                              baseColor: Colors.grey.shade300,
-                                              highlightColor:
-                                                  Colors.grey.shade100,
-                                              child: placeHolder(
-                                                  MediaQuery.of(context)
+                                    provider.loadingDetail
+                                        ? Shimmer.fromColors(
+                                            baseColor: Colors.grey.shade300,
+                                            highlightColor:
+                                                Colors.grey.shade100,
+                                            child: placeHolder(100, 8),
+                                          )
+                                        : Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Pilih Murotal :",
+                                                  style: TextStyle(
+                                                    fontSize: 8,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.grey.shade600,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                SingleChildScrollView(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  child: Wrap(
+                                                    spacing:
+                                                        3, // Mengatur jarak antar Chip
+                                                    children: list.map((e) {
+                                                      var entry =
+                                                          e.entries.first;
+                                                      return ValueListenableBuilder<
+                                                              String>(
+                                                          valueListenable:
+                                                              selectedMurotal,
+                                                          builder: (context,
+                                                              val, _) {
+                                                            return fiturFilterButton(
+                                                              () {
+                                                                selectedMurotal
+                                                                        .value =
+                                                                    entry.key;
+                                                              },
+                                                              entry.value,
+                                                              val == entry.key,
+                                                            );
+                                                          });
+                                                    }).toList(),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    if (id != 1 && id != 9)
+                                      Wrap(
+                                        children: [
+                                          provider.loadingDetail
+                                              ? Shimmer.fromColors(
+                                                  baseColor:
+                                                      Colors.grey.shade300,
+                                                  highlightColor:
+                                                      Colors.grey.shade100,
+                                                  child: placeHolder(
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          3,
+                                                      14),
+                                                )
+                                              : Image.asset(
+                                                  width: MediaQuery.of(context)
                                                           .size
                                                           .width /
                                                       3,
-                                                  14),
-                                            )
-                                          : Image.asset(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  3,
-                                              "assets/images/bismillah.png",
-                                            ),
-                                    ],
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Wrap(
-                                          spacing:
-                                              3, // Mengatur jarak antar Chip
-                                          children: list.map((e) {
-                                            var entry = e.entries.first;
-                                            return Container(
-                                              child: Chip(
-                                                label: Text(
-                                                  entry.value,
-                                                  style: TextStyle(fontSize: 5),
+                                                  "assets/images/bismillah.png",
                                                 ),
-                                              ),
-                                            );
-                                          }).toList(),
-                                        ),
+                                        ],
                                       ),
-                                    )
                                   ],
                                 ),
                         );
-                      }),
+                      },
+                    ),
+                  ),
                 ),
-                //background: Image.asset(
-                //  'assets/images/newBeach.jpg',
-                //  fit: BoxFit.fill,
-                //),
-              ),
-      );
-    });
+        );
+      },
+    );
   }
+}
+
+InkWell fiturFilterButton(VoidCallback? onTap, String title, bool isActive) {
+  return InkWell(
+    onTap: onTap,
+    child: AnimatedContainer(
+        duration: Duration(milliseconds: 500),
+        height: 25,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: isActive ? cPrimary : Colors.blue[50],
+        ),
+        padding: EdgeInsets.symmetric(vertical: 6, horizontal: 13),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  color: isActive ? Colors.white : cPrimary),
+            ),
+            if (isActive) ...[
+              SizedBox(
+                width: 4,
+              ),
+              Icon(
+                Icons.volume_up_rounded,
+                color: isActive ? Colors.white : cPrimary,
+                size: 15,
+              )
+            ]
+          ],
+        )),
+  );
 }
 
 class SurahTempatTurunImage extends StatelessWidget {
