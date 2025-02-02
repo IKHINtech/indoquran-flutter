@@ -157,7 +157,8 @@ class _AyatBuilderState extends State<AyatBuilder> {
   final player = AudioPlayer();
   final ValueNotifier<bool> _isPlay = ValueNotifier<bool>(false);
 
-  Future<void> _loadAudio(String url) async {
+  Future<void> _loadAudio(Ayat ayat, String url) async {
+    widget.selectedAyat.value = ayat;
     _isPlay.value = true;
     await player.setUrl(url);
     await player.play();
@@ -221,8 +222,7 @@ class _AyatBuilderState extends State<AyatBuilder> {
                                       builder: (context, selectedAyat, _) {
                                         return IconButton(
                                           onPressed: () async {
-                                            widget.selectedAyat.value = ayat;
-                                            await _loadAudio(
+                                            await _loadAudio(ayat,
                                                 ayat.audio![valueMurotal]!);
                                           },
                                           icon: ValueListenableBuilder<bool>(
@@ -234,7 +234,10 @@ class _AyatBuilderState extends State<AyatBuilder> {
                                                     selectedAyat!.nomorAyat);
                                                 return Icon(
                                                   size: 16,
-                                                  isPlay && ayat == selectedAyat
+                                                  isPlay &&
+                                                          ayat.nomorAyat ==
+                                                              selectedAyat
+                                                                  .nomorAyat
                                                       ? TablerIcons.player_pause
                                                       : TablerIcons.player_play,
                                                   color: Colors.orange,
