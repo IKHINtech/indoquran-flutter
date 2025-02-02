@@ -8,6 +8,7 @@ import 'package:indoquran/providers/alquran_providers.dart';
 import 'package:indoquran/widgets/loading_ayat.dart';
 import 'package:indoquran/widgets/nomor.dart';
 import 'package:indoquran/widgets/placeholder.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -34,6 +35,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   static const kExpandedHeight = 250.0;
   ValueNotifier<bool> _isFabVisible = ValueNotifier<bool>(false);
   ValueNotifier<String> _selectedMurotal = ValueNotifier<String>("01");
+  ValueNotifier<Ayat?> _selectedAyat = ValueNotifier<Ayat?>(null);
 
   @override
   void initState() {
@@ -99,7 +101,10 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                 kExpandedHeight: kExpandedHeight,
                 isScrolled: isScrolled,
               ),
-              AyatBuilder(provider: provider),
+              AyatBuilder(
+                selectedMurotal: _selectedMurotal,
+                selectedAyat: _selectedAyat,
+              ),
             ],
           ),
         ),
@@ -136,10 +141,12 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
 }
 
 class AyatBuilder extends StatefulWidget {
-  final SuratProvider provider;
+  final ValueNotifier<String> selectedMurotal;
+  final ValueNotifier<Ayat?> selectedAyat;
   const AyatBuilder({
     super.key,
-    required this.provider,
+    required this.selectedMurotal,
+    required this.selectedAyat,
   });
 
   @override
@@ -147,132 +154,166 @@ class AyatBuilder extends StatefulWidget {
 }
 
 class _AyatBuilderState extends State<AyatBuilder> {
+  final player = AudioPlayer();
+  final ValueNotifier<bool> _isPlay = ValueNotifier<bool>(false);
+
+  Future<void> _loadAudio(String url) async {
+    _isPlay.value = true;
+    await player.setUrl(url);
+    await player.play();
+    _isPlay.value = false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          if (widget.provider.loadingDetail) {
-            return AyatLoading();
-          } else {
-            Ayat ayat = widget.provider.suratDetail!.ayat![index];
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        constraints: const BoxConstraints(
-                          minWidth: 40,
-                          maxWidth: 40,
-                          minHeight: 40,
-                          maxHeight: 40,
-                        ),
-                        child: NomorWidget(
-                          nomor: ayat.nomorAyat,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: Text(
-                                    "Lihat Ayat ${ayat.nomorAyat}",
-                                    style: GoogleFonts.scheherazadeNew(),
-                                  ),
-                                ),
-                              );
-                            },
-                            icon: const Icon(
-                              size: 16,
-                              TablerIcons.notes,
-                              color: Colors.green,
-                            ),
+    return Consumer<SuratProvider>(builder: (context, provider, _) {
+      return SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            if (provider.loadingDetail) {
+              return AyatLoading();
+            } else {
+              Ayat ayat = provider.suratDetail!.ayat![index];
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          constraints: const BoxConstraints(
+                            minWidth: 40,
+                            maxWidth: 40,
+                            minHeight: 40,
+                            maxHeight: 40,
                           ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              size: 16,
-                              TablerIcons.player_play,
-                              color: Colors.orange,
-                            ),
+                          child: NomorWidget(
+                            nomor: ayat.nomorAyat,
                           ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              size: 16,
-                              TablerIcons.dots,
-                              color: cPrimary,
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    ayat.teksArab,
-                    textAlign: TextAlign.end,
-                    style: GoogleFonts.scheherazadeNew(
-                      fontSize: 20,
-                      height: 2.5,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        ),
+                        Row(
                           children: [
-                            Text(
-                              ayat.teksLatin,
-                              textAlign: TextAlign.justify,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w800,
-                                height: 1.5,
+                            IconButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text(
+                                      "Lihat Ayat ${ayat.nomorAyat}",
+                                      style: GoogleFonts.scheherazadeNew(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                size: 16,
+                                TablerIcons.notes,
+                                color: Colors.green,
+                              ),
+                            ),
+                            ValueListenableBuilder<String>(
+                                valueListenable: widget.selectedMurotal,
+                                builder: (context, valueMurotal, _) {
+                                  return ValueListenableBuilder(
+                                      valueListenable: widget.selectedAyat,
+                                      builder: (context, selectedAyat, _) {
+                                        return IconButton(
+                                          onPressed: () async {
+                                            widget.selectedAyat.value = ayat;
+                                            await _loadAudio(
+                                                ayat.audio![valueMurotal]!);
+                                          },
+                                          icon: ValueListenableBuilder<bool>(
+                                              valueListenable: _isPlay,
+                                              builder: (context, isPlay, _) {
+                                                print(
+                                                    "ini selected ayat ${ayat.nomorAyat}");
+                                                print(ayat.nomorAyat ==
+                                                    selectedAyat!.nomorAyat);
+                                                return Icon(
+                                                  size: 16,
+                                                  isPlay && ayat == selectedAyat
+                                                      ? TablerIcons.player_pause
+                                                      : TablerIcons.player_play,
+                                                  color: Colors.orange,
+                                                );
+                                              }),
+                                        );
+                                      });
+                                }),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                size: 16,
+                                TablerIcons.dots,
                                 color: cPrimary,
                               ),
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              ayat.teksIndonesia,
-                              textAlign: TextAlign.justify,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w800,
-                                height: 1.5,
-                              ),
-                            ),
+                            )
                           ],
-                        ),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      ayat.teksArab,
+                      textAlign: TextAlign.end,
+                      style: GoogleFonts.scheherazadeNew(
+                        fontSize: 20,
+                        height: 2.5,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Divider(),
-                ],
-              ),
-            );
-          }
-        },
-        childCount: widget.provider.loadingDetail
-            ? 10
-            : widget.provider.suratDetail != null
-                ? widget.provider.suratDetail!.jumlahAyat
-                : 0,
-      ),
-    );
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                ayat.teksLatin,
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1.5,
+                                  color: cPrimary,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                ayat.teksIndonesia,
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Divider(),
+                  ],
+                ),
+              );
+            }
+          },
+          childCount: provider.loadingDetail
+              ? 10
+              : provider.suratDetail != null
+                  ? provider.suratDetail!.jumlahAyat
+                  : 0,
+        ),
+      );
+    });
   }
 }
 

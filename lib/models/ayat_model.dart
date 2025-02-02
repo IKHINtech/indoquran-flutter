@@ -9,7 +9,7 @@ class Ayat {
   final String teksArab;
   final String teksLatin;
   final String teksIndonesia;
-  final Map<int, String>? audio;
+  final Map<String, String>? audio;
 
   Ayat({
     //required this.id,
@@ -28,8 +28,7 @@ class Ayat {
         teksArab: json[AyatFields.teksArab],
         teksLatin: json[AyatFields.teksLatin],
         teksIndonesia: json[AyatFields.teksIndonesia],
-        audio: Map.from(json[AyatFields.audio])
-            .map((k, v) => MapEntry(int.parse(k), v)),
+        audio: Map.from(json[AyatFields.audio]).map((k, v) => MapEntry(k, v)),
       );
 
   Map<String, dynamic> toJson() => {
