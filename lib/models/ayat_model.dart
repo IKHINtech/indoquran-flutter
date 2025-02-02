@@ -21,6 +21,13 @@ class Ayat {
     this.audio,
   });
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || (other is Ayat && nomorAyat == other.nomorAyat);
+
+  @override
+  int get hashCode => nomorAyat.hashCode;
+
   factory Ayat.fromJson(Map<String, dynamic> json) => Ayat(
         //id: json[AyatFields.id],
         //nomorSurat: json[AyatFields.nomorSurat],

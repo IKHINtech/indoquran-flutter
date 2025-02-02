@@ -36,6 +36,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   ValueNotifier<bool> _isFabVisible = ValueNotifier<bool>(false);
   ValueNotifier<String> _selectedMurotal = ValueNotifier<String>("01");
   ValueNotifier<Ayat?> _selectedAyat = ValueNotifier<Ayat?>(null);
+  ValueNotifier<int?> _selectedIndex = ValueNotifier<int?>(null);
 
   @override
   void initState() {
@@ -104,6 +105,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
               AyatBuilder(
                 selectedMurotal: _selectedMurotal,
                 selectedAyat: _selectedAyat,
+                selectedIndex: _selectedIndex,
               ),
             ],
           ),
@@ -143,10 +145,12 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
 class AyatBuilder extends StatefulWidget {
   final ValueNotifier<String> selectedMurotal;
   final ValueNotifier<Ayat?> selectedAyat;
+  final ValueNotifier<int?> selectedIndex;
   const AyatBuilder({
     super.key,
     required this.selectedMurotal,
     required this.selectedAyat,
+    required this.selectedIndex,
   });
 
   @override
@@ -157,12 +161,21 @@ class _AyatBuilderState extends State<AyatBuilder> {
   final player = AudioPlayer();
   final ValueNotifier<bool> _isPlay = ValueNotifier<bool>(false);
 
-  Future<void> _loadAudio(Ayat ayat, String url) async {
+  Future<void> _loadAudio(int index, Ayat ayat, String url) async {
     widget.selectedAyat.value = ayat;
+    widget.selectedIndex.value = index;
     _isPlay.value = true;
     await player.setUrl(url);
     await player.play();
-    _isPlay.value = false;
+    player.playerStateStream.listen((state) {
+      if (state.processingState case ProcessingState.completed) {
+        _isPlay.value = false;
+      }
+    });
+  }
+
+  Futute<void> _pause() async {
+    await player.pause();
   }
 
   @override
@@ -222,25 +235,29 @@ class _AyatBuilderState extends State<AyatBuilder> {
                                       builder: (context, selectedAyat, _) {
                                         return IconButton(
                                           onPressed: () async {
-                                            await _loadAudio(ayat,
+                                            await _loadAudio(index, ayat,
                                                 ayat.audio![valueMurotal]!);
                                           },
                                           icon: ValueListenableBuilder<bool>(
                                               valueListenable: _isPlay,
                                               builder: (context, isPlay, _) {
-                                                print(
-                                                    "ini selected ayat ${ayat.nomorAyat}");
-                                                print(ayat.nomorAyat ==
-                                                    selectedAyat!.nomorAyat);
-                                                return Icon(
-                                                  size: 16,
-                                                  isPlay &&
-                                                          ayat.nomorAyat ==
-                                                              selectedAyat
-                                                                  .nomorAyat
-                                                      ? TablerIcons.player_pause
-                                                      : TablerIcons.player_play,
-                                                  color: Colors.orange,
+                                                return AnimatedSwitcher(
+                                                  duration: Duration(
+                                                      milliseconds: 500),
+                                                  child: isPlay &&
+                                                          ayat == selectedAyat
+                                                      ? Icon(
+                                                          size: 16,
+                                                          TablerIcons
+                                                              .player_pause,
+                                                          color: Colors.orange,
+                                                        )
+                                                      : Icon(
+                                                          size: 16,
+                                                          TablerIcons
+                                                              .player_play,
+                                                          color: Colors.orange,
+                                                        ),
                                                 );
                                               }),
                                         );
