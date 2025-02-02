@@ -174,7 +174,7 @@ class _AyatBuilderState extends State<AyatBuilder> {
     });
   }
 
-  Futute<void> _pause() async {
+  Future<void> _pause() async {
     await player.pause();
   }
 
